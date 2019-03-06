@@ -2,7 +2,7 @@
 title: "Project2"
 output: html_document
 ---
-Harriet , heidi
+Harriet , heidi, Viola
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 ```
