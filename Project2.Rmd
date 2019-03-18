@@ -14,4 +14,3 @@ load("committees.rda")
 load("contributions.rda")
 ```
   
-  
