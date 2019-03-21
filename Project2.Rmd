@@ -17,8 +17,6 @@ library(tidyverse)
 library(dplyr)
 ```
 
-
-
 Modifying Candidates
 ```{r}
 candidates <- candidates %>%
@@ -31,3 +29,4 @@ view(candidates)
 ```
 
   
+
