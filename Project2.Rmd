@@ -48,14 +48,14 @@ candidates_NY2012 <- select(candidates_NY2012, cand_id, cand_name)
 Modifying house_elections
 ```{r}
 house_elections_NY2012 <- house_elections %>%
-  select(candidate_name, ge_winner)
+  select(fec_id, ge_winner)
 ```
 
-
+joining contributions and candidates
 ```{r}
 contr_cand_joined <- full_join(contributions_NY, candidates_NY2012, by= "cand_id")
 contr_cand_joined <- contr_cand_joined %>%
-  group_by(cand_name) %>%
+  group_by(cand_id, cand_name) %>%
   summarise(sum = sum(transaction_amt)) %>%
   arrange(sum)
 contr_cand_joined
@@ -63,34 +63,18 @@ contr_cand_joined
 
 
 
-```{r}
-contr_cand_joined <- contr_cand_joined %>%
-  mutate(name_lst = str_to_lower(cand_name))
 
-contr_cand_joined$name_lst <- contr_cand_joined$name_lst %>%
-  strsplit("\\, |\\,| ")
-```
-
+filter and modify house elections
 ```{r}
-house_elections_NY2012 <- house_elections_NY2012 %>%
-  mutate(name_lst = str_to_lower(candidate_name))
-house_elections_NY2012$name_lst <- house_elections_NY2012$name_lst %>%
-  strsplit("\\, |\\,| ")
+house_elections_NY2012 <- filter(house_elections_NY2012, fec_id %in% contr_cand_joined$cand_id)
+house_elections_NY2012 <- mutate(house_elections_NY2012, cand_id = fec_id )
 ```
 
 
 ```{r}
-house_elections_NY2012 <- filter(house_elections_NY2012, name_lst %in% contr_cand_joined$name_lst)
-```
 
 
-```{r}
-contr_cand_joined$cand_name <- str_to_lower(contr_cand_joined$cand_name)
-house_elections_NY2012$candidate_name<- str_to_lower(house_elections_NY2012$candidate_name)
-house_elections_NY2012 <- mutate(house_elections_NY2012, cand_name = candidate_name)
-
-
-final_df <- inner_join(contr_cand_joined, house_elections_NY2012, by = "cand_name")
+final_df <- inner_join(contr_cand_joined, house_elections_NY2012, by = "cand_id")
 final_df <- select(final_df,cand_name, sum, ge_winner)
 final_df <- final_df %>%
   arrange(ge_winner)
@@ -100,7 +84,7 @@ final_df <- final_df %>%
 
 ```{r}
 
-my_plot <- ggplot(data= final_df, aes(x = cand_name, y = sum, fill = ge_winner))+
+my_plot <- ggplot(data= final_df, aes(x = cand_id, y = sum, fill = ge_winner))+
   geom_histogram(stat = "identity")
 my_plot + theme(axis.text.x = element_text(angle = 90))
 ```
