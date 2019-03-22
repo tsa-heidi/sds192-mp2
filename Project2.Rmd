@@ -19,14 +19,21 @@ library(dplyr)
 
 Modifying Candidates
 ```{r}
-candidates <- candidates %>%
+candidates_NY2012 <- candidates %>%
   filter(cand_office_state == "NY")%>%
   filter(cand_party_affiliation == "DEM") %>%
   filter(cand_election_yr == 2012)
-candidates
-view(candidates)
-  
+candidates_NY2012
+
 ```
 
-  
+Modifying Contributions
+```{r}
+cand_IDs <- select(candidates_NY2012, matches("cand_id"))
+
+contributions_NY <- filter(contributions, cand_id %in% cand_IDs$cand_id)
+
+
+```
+
 
