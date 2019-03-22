@@ -25,7 +25,6 @@ candidates_NY2012 <- candidates %>%
   filter(cand_party_affiliation == "DEM") %>%
   filter(cand_election_yr == 2012)
 candidates_NY2012
-
 ```
 
 
