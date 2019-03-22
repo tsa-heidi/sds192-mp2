@@ -99,10 +99,6 @@ final_df <- final_df %>%
 ```
 
 
-
-
-
-
 ```{r}
 
 my_plot <- ggplot(data= final_df, aes(x = cand_name, y = sum, fill = ge_winner))+
