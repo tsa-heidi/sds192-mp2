@@ -15,6 +15,7 @@ load("committees.rda")
 load("contributions.rda")
 library(tidyverse)
 library(dplyr)
+library(ggrepel)
 ```
 
 Modifying Candidates
@@ -27,13 +28,87 @@ candidates_NY2012
 
 ```
 
+
+
 Modifying Contributions
 ```{r}
 cand_IDs <- select(candidates_NY2012, matches("cand_id"))
 
 contributions_NY <- filter(contributions, cand_id %in% cand_IDs$cand_id)
 
+contributions_NY <- contributions_NY %>%
+  select(cand_id, transaction_amt)
+contributions_NY
+
+candidates_NY2012 <- select(candidates_NY2012, cand_id, cand_name)
+```
+
+
+
+
+Modifying house_elections
+```{r}
+house_elections_NY2012 <- house_elections %>%
+  select(candidate_name, ge_winner)
+```
+
+
+```{r}
+contr_cand_joined <- full_join(contributions_NY, candidates_NY2012, by= "cand_id")
+contr_cand_joined <- contr_cand_joined %>%
+  group_by(cand_name) %>%
+  summarise(sum = sum(transaction_amt)) %>%
+  arrange(sum)
+contr_cand_joined
+```
+
+
+
+```{r}
+contr_cand_joined <- contr_cand_joined %>%
+  mutate(name_lst = str_to_lower(cand_name))
+
+contr_cand_joined$name_lst <- contr_cand_joined$name_lst %>%
+  strsplit("\\, |\\,| ")
+```
+
+```{r}
+house_elections_NY2012 <- house_elections_NY2012 %>%
+  mutate(name_lst = str_to_lower(candidate_name))
+house_elections_NY2012$name_lst <- house_elections_NY2012$name_lst %>%
+  strsplit("\\, |\\,| ")
+```
+
+
+```{r}
+house_elections_NY2012 <- filter(house_elections_NY2012, name_lst %in% contr_cand_joined$name_lst)
+```
+
+
+```{r}
+contr_cand_joined$cand_name <- str_to_lower(contr_cand_joined$cand_name)
+house_elections_NY2012$candidate_name<- str_to_lower(house_elections_NY2012$candidate_name)
+house_elections_NY2012 <- mutate(house_elections_NY2012, cand_name = candidate_name)
+
+
+final_df <- inner_join(contr_cand_joined, house_elections_NY2012, by = "cand_name")
+final_df <- select(final_df,cand_name, sum, ge_winner)
+final_df <- final_df %>%
+  arrange(ge_winner)
 
 ```
+
+
+
+
+
+
+```{r}
+
+my_plot <- ggplot(data= final_df, aes(x = cand_name, y = sum, fill = ge_winner))+
+  geom_histogram(stat = "identity")
+my_plot + theme(axis.text.x = element_text(angle = 90))
+```
+
 
 
