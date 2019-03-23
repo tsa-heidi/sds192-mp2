@@ -85,7 +85,7 @@ Creating the final data frame
 ```{r}
 final_df <- inner_join(contr_cand_joined, house_elections_NY2012, by = "cand_id")
 final_df <- select(final_df,cand_name, sum, ge_winner) %>%
-  arrange(ge_winner)
+  arrange(ge_winner) 
 final_df <- na.omit(final_df)
 ```
 
