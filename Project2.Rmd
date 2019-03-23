@@ -16,9 +16,6 @@ load("committees.rda")
 load("contributions.rda")
 ```
 
-```{r}
-read.delim()
-```
 
 ```{r}
 library(tidyverse)
@@ -85,17 +82,10 @@ Creating the final data frame
 ```{r}
 final_df <- inner_join(contr_cand_joined, house_elections_NY2012, by = "cand_id")
 final_df <- select(final_df,cand_name, sum, ge_winner) %>%
-  arrange(ge_winner) 
+  arrange(ge_winner) %>%
+  filter(sum>=20000)
 final_df <- na.omit(final_df)
 ```
-
-```{r}
-final_df<-final_df%>%
-  filter(sum>=20000)
-```
-
-
-
 
 Creating a data graphic
 ```{r}
