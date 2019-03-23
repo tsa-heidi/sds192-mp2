@@ -37,29 +37,29 @@ Modifying Candidates
 candidates_NY2012 <- candidates %>%
   filter(cand_office_state == "NY")%>%
   filter(cand_party_affiliation == "DEM") %>%
-  filter(cand_election_yr == 2012)
+  filter(cand_election_yr == 2012) %>%
+  select(cand_id, cand_name)
 candidates_NY2012
 ```
 
 Create a table of candidate IDs
 ```{r}
 cand_IDs <- select(candidates_NY2012, matches("cand_id"))
-candidates_NY2012 <- select(candidates_NY2012, cand_id, cand_name)
 ```
 
 Modifying Contributions
 ```{r}
-contributions_NY <- filter(contributions, 
-                           cand_id %in%
-                           cand_IDs$cand_id) %>%
+contributions_NY <- contributions %>% 
+  filter(cand_id %in%
+           cand_IDs$cand_id) %>%
   select(cand_id, transaction_amt)
-contributions_NY
 ```
+
 
 Modifying house_elections
 ```{r}
 house_elections_NY2012 <- house_elections %>%
-  select(fec_id, ge_winner)
+  select(fec_id, ge_winner, general_votes)
 ```
 
 joining contributions and candidates
@@ -82,7 +82,7 @@ house_elections_NY2012 <-  mutate(house_elections_NY2012, cand_id = fec_id )
 Creating the final data frame
 ```{r}
 final_df <- inner_join(contr_cand_joined, house_elections_NY2012, by = "cand_id")
-final_df <- select(final_df,cand_name, sum, ge_winner) %>%
+final_df <- select(final_df,cand_name, sum, ge_winner, general_votes) %>%
   arrange(ge_winner) %>%
   filter(sum>=20000)
 final_df <- na.omit(final_df)
@@ -96,8 +96,23 @@ my_plot + theme(axis.text.x = element_text(angle = 90))
 options(scipen = 99999)
 ```
 
+```{r}
+my_plot2 <- ggplot(data = final_df, aes(x=sum, y=general_votes, color=ge_winner)) + geom_point()
+my_plot2
+```
 
+Creating a function to wrangle candidates data
+```{r}
+mod_candidates <- function(year_arg, state_arg, party_arg) {
+  candidates %>%
+    filter(cand_election_yr == year_arg) %>%
+    filter(cand_office_state == state_arg) %>%
+    filter(cand_party_affiliation == party_arg) %>%
+    select(cand_id, cand_name) 
+}
+```
 
-
-
-
+```{r}
+NY <- mod_candidates(2012, "NY", "DEM")
+NY
+```
