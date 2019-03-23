@@ -80,14 +80,13 @@ house_elections_NY2012 <-  mutate(house_elections_NY2012, cand_id = fec_id )
 
 Creating the final data frame
 ```{r}
-
 final_df <- inner_join(contr_cand_joined, house_elections_NY2012, by = "cand_id") %>% 
-  select(final_df,cand_name, sum, ge_winner, incumbent) %>% 
+  select(final_df,cand_name, sum, ge_winner, incumbent)
 
 final_df <- inner_join(contr_cand_joined, house_elections_NY2012, by = "cand_id")
-final_df <- select(final_df,cand_name, sum, ge_winner, general_votes) %>%
+final_df <- select(final_df,cand_name, sum, ge_winner, incumbent) %>%
   arrange(ge_winner) %>%
-  filter(sum>=20000)
+  filter(sum>=40000)
 final_df <- na.omit(final_df)
 ```
 
@@ -105,11 +104,6 @@ my_plot <- ggplot(data= final_df, aes(x = cand_name, y = sum, fill = ge_winner))
   
 my_plot + theme(axis.text.x = element_text(angle = 0)) 
 options(scipen = 100000)
-
-my_plot <- ggplot(data= final_df, aes(x = cand_name, y = sum, fill = ge_winner)) +
-  geom_histogram(stat = "identity")
-my_plot + theme(axis.text.x = element_text(angle = 90)) 
-options(scipen = 99999)
 
 ```
 
