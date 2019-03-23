@@ -59,7 +59,11 @@ contributions_NY <- contributions %>%
 Modifying house_elections
 ```{r}
 house_elections_NY2012 <- house_elections %>%
+<<<<<<< HEAD
   select(fec_id, ge_winner, incumbent)
+=======
+  select(fec_id, ge_winner, general_votes)
+>>>>>>> parent of 4a0ef1c... Update Project2.Rmd
 ```
 
 joining contributions and candidates
@@ -93,6 +97,7 @@ final_df <- na.omit(final_df)
 
 Creating a data graphic
 ```{r}
+<<<<<<< HEAD
 
 my_plot <- ggplot(data= final_df, aes(x = cand_name, y = sum, fill = ge_winner)) + facet_wrap(~incumbent) +
   geom_bar(position = "dodge",stat = "identity")+
@@ -106,11 +111,16 @@ my_plot <- ggplot(data= final_df, aes(x = cand_name, y = sum, fill = ge_winner))
 my_plot + theme(axis.text.x = element_text(angle = 0)) 
 options(scipen = 100000)
 
+=======
+>>>>>>> parent of 4a0ef1c... Update Project2.Rmd
 my_plot <- ggplot(data= final_df, aes(x = cand_name, y = sum, fill = ge_winner)) +
   geom_histogram(stat = "identity")
 my_plot + theme(axis.text.x = element_text(angle = 90)) 
 options(scipen = 99999)
+<<<<<<< HEAD
 
+=======
+>>>>>>> parent of 4a0ef1c... Update Project2.Rmd
 ```
 
 ```{r}
@@ -120,6 +130,7 @@ my_plot2
 
 Creating a function to wrangle candidates data
 ```{r}
+<<<<<<< HEAD
 
 mod_candidates <- function(year, state, party) {
   candidates %>%
@@ -184,4 +195,18 @@ mod_candidates <- function(year_arg, state_arg, party_arg) {
 NY <- mod_candidates(2012, "NY", "DEM")
 NY
 
+=======
+mod_candidates <- function(year_arg, state_arg, party_arg) {
+  candidates %>%
+    filter(cand_election_yr == year_arg) %>%
+    filter(cand_office_state == state_arg) %>%
+    filter(cand_party_affiliation == party_arg) %>%
+    select(cand_id, cand_name) 
+}
+```
+
+```{r}
+NY <- mod_candidates(2012, "NY", "DEM")
+NY
+>>>>>>> parent of 4a0ef1c... Update Project2.Rmd
 ```
