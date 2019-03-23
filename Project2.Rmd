@@ -10,7 +10,7 @@ knitr::opts_chunk$set(echo = TRUE)
 ```
 
 ```{r}
-devtools::install_github("benmarwick/wordcountaddin", type = "source", dependencies = TRUE)18
+devtools::install_github("benmarwick/wordcountaddin", type = "source", dependencies = TRUE)
 ```
 
 
@@ -86,8 +86,6 @@ house_elections_NY2012 <-  mutate(house_elections_NY2012, cand_id = fec_id )
 
 Creating the final data frame
 ```{r}
-final_df <- inner_join(contr_cand_joined, house_elections_NY2012, by = "cand_id") %>% 
-  select(final_df,cand_name, sum, ge_winner, incumbent)
 
 final_df <- inner_join(contr_cand_joined, house_elections_NY2012, by = "cand_id")
 final_df <- select(final_df,cand_name, sum, ge_winner, incumbent) %>%
