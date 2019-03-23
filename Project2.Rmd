@@ -82,9 +82,6 @@ Creating the final data frame
 final_df <- inner_join(contr_cand_joined, house_elections_NY2012, by = "cand_id")
 final_df <- select(final_df,cand_name, sum, ge_winner) %>%
   arrange(ge_winner)
-```
-
-```{r}
 final_df <- na.omit(final_df)
 ```
 
@@ -93,7 +90,7 @@ Creating a data graphic
 ```{r}
 my_plot <- ggplot(data= final_df, aes(x = cand_id, y = sum, fill = ge_winner)) +
   geom_histogram(stat = "identity")
-my_plot + theme(axis.text.x = element_text(angle = 90))
+my_plot + theme(axis.text.x = element_text(angle = 90)) 
 options(scipen = 99999)
 ```
 
