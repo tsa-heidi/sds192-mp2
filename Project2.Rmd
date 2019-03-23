@@ -90,7 +90,7 @@ Creating a data graphic
 ```{r}
 my_plot <- ggplot(data= final_df, aes(x = cand_id, y = sum, fill = ge_winner)) +
   geom_histogram(stat = "identity")
-my_plot + theme(axis.text.x = element_text(angle = 90))
+my_plot + theme(axis.text.x = element_text(angle = 90)) 
 options(scipen = 99999)
 ```
 
