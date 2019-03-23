@@ -24,6 +24,7 @@ library(dplyr)
 library(ggrepel)
 ```
 
+
 ```{r, message= FALSE, eval=FALSE}
 # Verifying the data ----
 glimpse(house_elections)
