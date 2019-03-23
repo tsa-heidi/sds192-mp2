@@ -1,11 +1,12 @@
 ---
 title: "Project2"
-output: html_document
 author: Heidi, Harriet, Viola 
+output: 
+  html_document:
+    cold_folding: hide
 ---
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
-
 ```
 
 ```{r}
@@ -13,9 +14,20 @@ load("house_elections.rda")
 load("candidates.rda")
 load("committees.rda")
 load("contributions.rda")
+```
+
+```{r}
 library(tidyverse)
 library(dplyr)
 library(ggrepel)
+```
+
+Verifying the data
+```{r}
+glimpse(house_elections)
+glimpse(candidates)
+glimpse(committees)
+glimpse(contributions)
 ```
 
 Modifying Candidates
@@ -27,23 +39,20 @@ candidates_NY2012 <- candidates %>%
 candidates_NY2012
 ```
 
-
-
-Modifying Contributions
+Create a table of candidate IDs
 ```{r}
 cand_IDs <- select(candidates_NY2012, matches("cand_id"))
-
-contributions_NY <- filter(contributions, cand_id %in% cand_IDs$cand_id)
-
-contributions_NY <- contributions_NY %>%
-  select(cand_id, transaction_amt)
-contributions_NY
-
 candidates_NY2012 <- select(candidates_NY2012, cand_id, cand_name)
 ```
 
-
-
+Modifying Contributions
+```{r}
+contributions_NY <- filter(contributions, 
+                           cand_id %in%
+                           cand_IDs$cand_id) %>%
+  select(cand_id, transaction_amt)
+contributions_NY
+```
 
 Modifying house_elections
 ```{r}
@@ -62,32 +71,27 @@ contr_cand_joined
 ```
 
 
-
-
 filter and modify house elections
 ```{r}
-house_elections_NY2012 <- filter(house_elections_NY2012, fec_id %in% contr_cand_joined$cand_id)
-house_elections_NY2012 <- mutate(house_elections_NY2012, cand_id = fec_id )
+house_elections_NY2012 <- filter(house_elections_NY2012, fec_id %in% contr_cand_joined$cand_id) %>%
+  mutate(house_elections_NY2012, cand_id = fec_id )
 ```
 
-
+Creating the final data frame
 ```{r}
-
-
 final_df <- inner_join(contr_cand_joined, house_elections_NY2012, by = "cand_id")
-final_df <- select(final_df,cand_name, sum, ge_winner)
-final_df <- final_df %>%
+final_df <- select(final_df,cand_name, sum, ge_winner) %>%
   arrange(ge_winner)
 
 ```
 
 
-
+Creating a data graphic
 ```{r}
-
-my_plot <- ggplot(data= final_df, aes(x = cand_id, y = sum, fill = ge_winner))+
+my_plot <- ggplot(data= final_df, aes(x = cand_id, y = sum, fill = ge_winner)) +
   geom_histogram(stat = "identity")
 my_plot + theme(axis.text.x = element_text(angle = 90))
+options(scipen = 99999)
 ```
 
 
