@@ -1,8 +1,8 @@
 ---
 title: "Project2"
 output: html_document
+author: Heidi, Harriet, Viola 
 ---
-Harriet , heidi, Viola
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 
@@ -80,6 +80,7 @@ final_df <- final_df %>%
   arrange(ge_winner)
 
 ```
+
 
 
 ```{r}
