@@ -81,7 +81,6 @@ Creating the final data frame
 ```{r}
 final_df <- inner_join(contr_cand_joined, house_elections_NY2012, by = "cand_id") %>% 
   select(final_df,cand_name, sum, ge_winner, incumbent) %>% 
-  select(final_df,cand_name, sum, ge_winner) %>%
   arrange(ge_winner) %>%
   filter(sum>=40000)
 final_df <- na.omit(final_df)
@@ -95,7 +94,7 @@ my_plot <- ggplot(data= final_df, aes(x = cand_name, y = sum, fill = ge_winner))
   ggtitle("Amount of money spent on individual candidates")+
   xlab("")+
   labs(fill="")+
-  scale_fill_discrete(labels=c("Won","Lost"))+
+  scale_fill_discrete(labels=c("Lost","Won"))+
   scale_y_continuous(name="Money Spent (millions of USD)",breaks=c(0,2000000,4000000),labels=c("0$", "2,000,000$", "4,000,000$"))
   
 my_plot + theme(axis.text.x = element_text(angle = 0)) 
