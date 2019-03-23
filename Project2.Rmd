@@ -60,6 +60,7 @@ Modifying house_elections
 ```{r}
 house_elections_NY2012 <- house_elections %>%
   select(fec_id, ge_winner, incumbent)
+
 ```
 
 joining contributions and candidates
@@ -105,6 +106,12 @@ my_plot <- ggplot(data= final_df, aes(x = cand_name, y = sum, fill = ge_winner))
 my_plot + theme(axis.text.x = element_text(angle = 0)) 
 options(scipen = 100000)
 
+my_plot <- ggplot(data= final_df, aes(x = cand_name, y = sum, fill = ge_winner)) +
+  geom_histogram(stat = "identity")
+my_plot + theme(axis.text.x = element_text(angle = 90)) 
+options(scipen = 99999)
+
+
 ```
 
 ```{r}
@@ -114,6 +121,7 @@ my_plot2
 
 Creating a function to wrangle candidates data
 ```{r}
+
 
 mod_candidates <- function(year, state, party) {
   candidates %>%
@@ -178,4 +186,16 @@ mod_candidates <- function(year_arg, state_arg, party_arg) {
 NY <- mod_candidates(2012, "NY", "DEM")
 NY
 
+mod_candidates <- function(year_arg, state_arg, party_arg) {
+  candidates %>%
+    filter(cand_election_yr == year_arg) %>%
+    filter(cand_office_state == state_arg) %>%
+    filter(cand_party_affiliation == party_arg) %>%
+    select(cand_id, cand_name) 
+}
+```
+
+```{r}
+NY <- mod_candidates(2012, "NY", "DEM")
+NY
 ```
