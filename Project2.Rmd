@@ -23,6 +23,7 @@ library(dplyr)
 library(ggrepel)
 ```
 
+
 Verifying the data
 ```{r}
 glimpse(house_elections)
