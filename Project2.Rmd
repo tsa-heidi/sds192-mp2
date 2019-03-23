@@ -58,11 +58,7 @@ contributions_NY
 Modifying house_elections
 ```{r}
 house_elections_NY2012 <- house_elections %>%
-
   select(fec_id, ge_winner, incumbent)
-
-  select(fec_id, ge_winner)
-
 ```
 
 joining contributions and candidates
@@ -83,12 +79,9 @@ house_elections_NY2012 <-  mutate(house_elections_NY2012, cand_id = fec_id )
 
 Creating the final data frame
 ```{r}
-final_df <- inner_join(contr_cand_joined, house_elections_NY2012, by = "cand_id")
-
-final_df <- select(final_df,cand_name, sum, ge_winner, incumbent) %>%
-
-final_df <- select(final_df,cand_name, sum, ge_winner) %>%
-
+final_df <- inner_join(contr_cand_joined, house_elections_NY2012, by = "cand_id") %>% 
+  select(final_df,cand_name, sum, ge_winner, incumbent) %>% 
+  select(final_df,cand_name, sum, ge_winner) %>%
   arrange(ge_winner) %>%
   filter(sum>=40000)
 final_df <- na.omit(final_df)
@@ -96,7 +89,7 @@ final_df <- na.omit(final_df)
 
 Creating a data graphic
 ```{r}
-my_plot <- ggplot(data= final_df, aes(x = cand_name, y = sum, fill = ge_winner)) +
+my_plot <- ggplot(data= final_df, aes(x = cand_name, y = sum, fill = ge_winner)) + facet_wrap(~incumbent) +
   geom_bar(position = "dodge",stat = "identity")+
   coord_flip()+
   ggtitle("Amount of money spent on individual candidates")+
