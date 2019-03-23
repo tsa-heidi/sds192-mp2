@@ -73,8 +73,8 @@ contr_cand_joined
 
 filter and modify house elections
 ```{r}
-house_elections_NY2012 <- filter(house_elections_NY2012, fec_id %in% contr_cand_joined$cand_id) %>%
-  mutate(house_elections_NY2012, cand_id = fec_id )
+house_elections_NY2012 <- filter(house_elections_NY2012, fec_id %in% contr_cand_joined$cand_id)
+house_elections_NY2012 <-  mutate(house_elections_NY2012, cand_id = fec_id )
 ```
 
 Creating the final data frame
