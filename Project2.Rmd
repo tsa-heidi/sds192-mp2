@@ -105,8 +105,7 @@ my_plot <- ggplot(data= final_df, aes(x = reorder(cand_name,-sum), y = sum, fill
   xlab("")+
   labs(fill="")+
   scale_fill_discrete(labels=c("Lost","Won"))+
-  scale_y_continuous(name="Money Spent (millions of USD)",breaks=c(0,2000000,4000000),labels=c("0$", "2,000,000$", "4,000,000$"))+
-  facet_wrap(~incumbent)
+  scale_y_continuous(name="Money Spent (millions of USD)",breaks=c(0,2000000,4000000),labels=c("0$", "2,000,000$", "4,000,000$"))
   
 my_plot + theme(axis.text.x = element_text(angle = 0)) 
 options(scipen = 100000)
