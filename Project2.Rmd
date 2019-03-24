@@ -25,6 +25,8 @@ load("contributions.rda")
 library(tidyverse)
 library(dplyr)
 library(ggrepel)
+library(RColorBrewer)
+library(gridExtra)
 ```
 
 ```{r, message= FALSE, eval=FALSE}
@@ -114,7 +116,8 @@ my_plot1 <- ggplot(data = final_df,
   scale_y_continuous(name = "Money Spent (millions of USD)",                breaks=c(0,2000000,4000000),
                      labels=c("0$", 
                               "2,000,000$",
-                              "4,000,000$")) + theme(axis.text.x = element_text(angle = 0))
+                              "4,000,000$")) + 
+  theme(axis.text.x = element_text(angle = 0))
 ```
 
 
@@ -128,7 +131,6 @@ my_plot2 <- ggplot(data = final_df,
   geom_bar(position = "dodge",
            stat = "identity")+
   coord_flip() +
-  geom_text(aes(label = sum, nudge_y = 2))+
   ggtitle("Does contribution amount influence house election success?") +
   xlab("") +
   labs(fill="") +
@@ -136,9 +138,14 @@ my_plot2 <- ggplot(data = final_df,
   scale_y_continuous(
     name = "Money Spent (millions of USD)",
     breaks=c(0,2000000,4000000),
-    labels=c("0$", "2,000,000$", "4,000,000$")) + 
+    labels=c("0$", "2,000,000$", "4,000,000$")) +
+ scale_fill_manual(values=c("#95A5A6","#00CC00"))+
+  theme_get()+
   facet_wrap(~incumbent)
 ```
+
+
+
 
 ```{r}
 # The plot ----
