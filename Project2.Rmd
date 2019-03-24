@@ -111,7 +111,7 @@ final_df <- inner_join(contr_cand_joined,
 
 ```{r,message= FALSE}
 options(scipen = 100000)
-my_plot1 <- ggplot(data = final_df, 
+NYDplot <- ggplot(data = final_df, 
                    aes(x = reorder(cand_name,-sum), 
                        y = sum, fill = ge_winner)) + 
   geom_bar(position = "dodge",
@@ -136,7 +136,7 @@ names(incumbent)<-c("FALSE","TRUE")
 
 ```{r}
 # Faceting the final data graphic by incumbent ----
-my_plot2 <- ggplot(data = final_df, 
+NYDplot2 <- ggplot(data = final_df, 
                    aes(x = reorder(cand_name,-sum),
                        y = sum, 
                        fill = ge_winner)) + 
