@@ -98,18 +98,19 @@ final_df <- inner_join(contr_cand_joined,
   filter(!is.na(sum))
 ```
 #Creating the data graphic using the final data frame
+
 ```{r,message= FALSE}
-my_plot1<- ggplot(data = final_df, 
+options(scipen = 100000)
+my_plot1 <- ggplot(data = final_df, 
                    aes(x = reorder(cand_name,-sum), 
-                       y = sum, fill = ge_winner) + 
+                       y = sum, fill = ge_winner)) + 
   geom_bar(position = "dodge",
            stat = "identity") +
   coord_flip() +
   ggtitle("Does contribution amount influence house election success?") +
   xlab("") +
-  geom_text(aes(label = sum, nudge_y = 2)+
   labs(fill="") +
-  scale_fill_discrete(labels=c("Lostxvxf", "Won")) +
+  scale_fill_discrete(labels=c("Lost", "Won")) +
   scale_y_continuous(name = "Money Spent (millions of USD)",                breaks=c(0,2000000,4000000),
                      labels=c("0$", 
                               "2,000,000$",
@@ -127,7 +128,7 @@ my_plot2 <- ggplot(data = final_df,
   geom_bar(position = "dodge",
            stat = "identity")+
   coord_flip() +
-  geom_text(aes(label = sum, nudge_y = 2)+
+  geom_text(aes(label = sum, nudge_y = 2))+
   ggtitle("Does contribution amount influence house election success?") +
   xlab("") +
   labs(fill="") +
