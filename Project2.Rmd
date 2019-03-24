@@ -87,10 +87,8 @@ house_elections_NY2012 <-  mutate(house_elections_NY2012, cand_id = fec_id )
 Creating the final data frame
 ```{r}
 final_df <- inner_join(contr_cand_joined, house_elections_NY2012, by = "cand_id") %>% 
-  select(final_df,cand_name, sum, ge_winner, incumbent)
+  select(cand_name, sum, ge_winner, incumbent)
 
-
-final_df <- inner_join(contr_cand_joined, house_elections_NY2012, by = "cand_id")
 final_df <- select(final_df,cand_name, sum, ge_winner, incumbent) %>%
   arrange(ge_winner) %>%
   filter(sum>=40000)
@@ -116,10 +114,6 @@ options(scipen = 100000)
 
 ```
 
-```{r}
-my_plot2 <- ggplot(data = final_df, aes(x=sum, y=general_votes, color=ge_winner)) + geom_point()
-my_plot2
-```
 
 # Functions
 
