@@ -41,6 +41,7 @@ glimpse(contributions)
 # Modifying the candidates data frame ----
 candidates_NY2012 <- candidates %>%
   filter(cand_office_state == "NY")%>%
+  filter(cand_party_affiliation == "DEM")
   filter(cand_election_yr == 2012) %>%
   select(cand_id, 
          cand_name)
@@ -173,6 +174,7 @@ Creating a function to wrangle candidates data
 function1_candidates <- function(year, state) {
   candidates %>%
     filter(cand_election_yr == year) %>%
+    filter(cand_party_affiliation == party) %>%
     filter(cand_office_state == state) %>%
     select(cand_id, cand_name) 
 }
@@ -227,16 +229,59 @@ function6_finaldf <- function(function4df, function5df) {
 }
 ```
 
+
 ```{r,message= FALSE}
 NYR <- function1_candidates(2012, "TX")
+
+```{r}
+function7_plot <- function(function6df) {
+	  ggplot(data = function6df, 
+	                   aes(x = reorder(cand_name,-sum), 
+	                       y = sum, 
+	                       fill = ge_winner)) + 
+	  geom_bar(position = "dodge",
+	           stat = "identity") +
+	                     coord_flip() +
+  ggtitle("Does contribution amount influence house election success?") +
+  xlab("") +
+  labs(fill="") +
+  scale_fill_discrete(labels=c("Lost", "Won")) +
+  scale_y_continuous(name = "Money Spent (millions of USD)",                breaks=c(0,2000000,4000000),
+                     labels=c("0$", 
+                              "2,000,000$",
+                              "4,000,000$")) + 
+  theme(axis.text.x = element_text(angle = 0))+
+  scale_fill_manual(values=c("#95A5A6","#00CC00"))
+}
+```
+
+```{r}
+function(function7plotname) {
+  function7plotname + facet_wrap(~incumbent,labeller = labeller(incumbent = incumbent))+
+   theme_get()
+}
+```
+
+```{r,message= FALSE}
+NYR <- function1_candidates(2012, "NY", "REP")
 NYRcandid <- function2_candid_id(NYR)
 NYRcontr <- function3_contributions(NYRcandid)
 NYRjoined <- function4_joincand_cont(NYR, NYRcontr)
 NYRhouse <- function5_house_elec(NYRjoined)
 NYRfinal <- function6_finaldf(NYRjoined, NYRhouse)
+
 ```
 
 
+```{r}
+NYRplot <- function7_plot(NYRfinal)
+NYRplot2 <- function8_facet(NYRplot)
+```
+
+```{r}
+NYRplot
+NYRplot2
+```
 
 ```{r}
 devtools::install_github("benmarwick/wordcountaddin", type = "source", dependencies = TRUE)
@@ -246,6 +291,7 @@ devtools::install_github("benmarwick/wordcountaddin", type = "source", dependenc
 ```{r}
 wordcountaddin::word_count("Project2.Rmd")
 ```
+
 
 #Using a GitHub repository and including a link to it in the footnotes
 We used Github Repository ^[https://github.com/violanguyen/sds192-mp2.git] 
