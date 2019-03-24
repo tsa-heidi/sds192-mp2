@@ -90,7 +90,7 @@ final_df <- inner_join(contr_cand_joined, house_elections_NY2012, by = "cand_id"
   select(cand_name, sum, ge_winner, incumbent)
 
 final_df <- select(final_df,cand_name, sum, ge_winner, incumbent) %>%
-  arrange(final_df,sum) %>%
+  arrange(final_df) %>%
   filter(sum>=40000)
 final_df <- na.omit(final_df)
 ```
@@ -98,14 +98,15 @@ final_df <- na.omit(final_df)
 Creating a data graphic
 ```{r}
 
-my_plot <- ggplot(data= final_df, aes(x = cand_name, y = sum, fill = ge_winner)) + 
+my_plot <- ggplot(data= final_df, aes(x = reorder(cand_name,-sum), y = sum, fill = ge_winner)) + 
   geom_bar(position = "dodge",stat = "identity")+
   coord_flip() +
   ggtitle("Amount of money spent on individual candidates")+
   xlab("")+
   labs(fill="")+
   scale_fill_discrete(labels=c("Lost","Won"))+
-  scale_y_continuous(name="Money Spent (millions of USD)",breaks=c(0,2000000,4000000),labels=c("0$", "2,000,000$", "4,000,000$"))
+  scale_y_continuous(name="Money Spent (millions of USD)",breaks=c(0,2000000,4000000),labels=c("0$", "2,000,000$", "4,000,000$"))+
+  facet_wrap(~incumbent)
   
 my_plot + theme(axis.text.x = element_text(angle = 0)) 
 options(scipen = 100000)
