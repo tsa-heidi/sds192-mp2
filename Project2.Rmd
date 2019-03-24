@@ -97,6 +97,7 @@ final_df <- inner_join(contr_cand_joined,
   filter(!is.na(sum))
 ```
 
+
 ```{r,message= FALSE}
 # Creating the data graphic using the final data frame
 options(scipen = 100000)
@@ -241,4 +242,6 @@ my_plot3
 my_plot3 + facet_wrap(~incumbent)
 
 ```
+
+
 
