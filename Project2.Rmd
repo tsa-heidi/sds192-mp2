@@ -151,10 +151,6 @@ my_plot2 <- ggplot(data = final_df,
    theme_get()
 ```
 
-
-
-
-
 ```{r}
 # The plot ----
 my_plot1  
