@@ -99,6 +99,7 @@ final_df <- inner_join(contr_cand_joined,
   filter(!is.na(sum))
 ```
 
+
 ```{r,message= FALSE}
 # Creating the data graphic using the final data frame
 options(scipen = 100000)
@@ -252,6 +253,7 @@ my_plot3 + facet_wrap(~incumbent)
 
 ```
 
+
 ```{r}
 devtools::install_github("benmarwick/wordcountaddin", type = "source", dependencies = TRUE)
 ```
@@ -260,7 +262,5 @@ devtools::install_github("benmarwick/wordcountaddin", type = "source", dependenc
 ```{r}
 wordcountaddin::word_count("Project2.Rmd")
 ```
-#
-
 
 
