@@ -158,12 +158,12 @@ NYDplot2 <- ggplot(data = final_df,
 
 ```{r}
 # The plot ----
-my_plot1  
+NYDplot 
 ```
 
 ```{r}
 # Second plot faceted by incumbents ----
-my_plot2
+NYDplot2
 ```
 
 
