@@ -13,12 +13,10 @@ knitr::opts_chunk$set(echo = TRUE)
 #### Using a GitHub repository and including a link to it in the footnotes
 We used Github Repository ^[https://github.com/tsa-heidi/sds192-mp2] 
 
-```{r}
+```{r, message=FALSE}
+# Word counter ----
 devtools::install_github("benmarwick/wordcountaddin", type = "source", dependencies = TRUE)
-```
 
-
-```{r}
 wordcountaddin::word_count("Project2.Rmd")
 ```
 
@@ -109,7 +107,7 @@ final_df <- inner_join(contr_cand_joined,
          ge_winner, 
          incumbent) %>%
   arrange(sum) %>%
-  filter(sum >= 40000) %>% # we chose to filter out candidates who received less than 50 000 dollars 
+  filter(sum >= 50000) %>% # we chose to filter out candidates who received less than 50 000 dollars^[http://www.msnbc.com/hardball/how-much-does-it-cost-win-seat-congre]
   filter(!is.na(sum))
 ```
 #Creating the data graphic using the final data frame
@@ -133,7 +131,6 @@ NYDplot <- ggplot(data = final_df,
                               "2,000,000",
                               "4,000,000")) + 
   theme(axis.text.x = element_text(angle = 0))
-NYDplot
 ```
 
 ```{r}
@@ -141,7 +138,7 @@ incumbent <- c("Non incumbent", "Incumbent")
 names(incumbent)<-c("FALSE","TRUE")
 ```
 
-```{r}
+```{r,message= FALSE}
 # Faceting the final data graphic by incumbent ----
 NYDplot2 <- ggplot(data = final_df, 
                    aes(x = reorder(cand_name,-sum),
@@ -226,9 +223,8 @@ function6_finaldf <- function(function4df, function5df) {
 }
 ```
 
-
-
-```{r}
+```{r,message= FALSE}
+# Function 7 creates a plot of the wrangled data created in function 6 ----
 function7_plot <- function(function6df) {
 	  ggplot(data = function6df, 
 	                   aes(x = reorder(cand_name,-sum), 
@@ -249,7 +245,8 @@ function7_plot <- function(function6df) {
 }
 ```
 
-```{r}
+```{r,message= FALSE}
+# Function 8 adds further analysis to the plot created by function 7 ----
 function8_facet <- function(function7plotname) {
   function7plotname + facet_wrap(~incumbent,labeller = labeller(incumbent = incumbent))+
    theme_get()
@@ -257,6 +254,7 @@ function8_facet <- function(function7plotname) {
 ```
 
 ```{r,message= FALSE}
+# Generalizing our analysis for New York Republicans ----
 NYR <- function1_candidates(2012, "NY", "REP")
 NYRcandid <- function2_candid_id(NYR)
 NYRcontr <- function3_contributions(NYRcandid)
@@ -267,7 +265,8 @@ NYRplot <- function7_plot(NYRfinal)
 NYRplot2 <- function8_facet(NYRplot)
 ```
 
-```{r}
+```{r,message= FALSE}
+# Generalizing our analysis for California Democrats ----
 CAD <- function1_candidates(2012, "CA", "DEM" )
 CADcandid <- function2_candid_id(CAD)
 CADcontr <- function3_contributions(CADcandid)
@@ -279,43 +278,45 @@ CADplot2 <- function8_facet(CADplot)
 ```
 
 ```{r,message= FALSE}
-	CAR <- function1_candidates(2012, "CA", "REP" )
-	CARcandid <- function2_candid_id(CAR)
-	CARcontr <- function3_contributions(CARcandid)
-	CARjoined <- function4_joincand_cont(CAR, CARcontr)
-	CARhouse <- function5_house_elec(CARjoined)
-	CARfinal <- function6_finaldf(CARjoined, CARhouse)
-	CARplot <- function7_plot(CARfinal)
-	CARplot2 <- function8_facet(CARplot)
+# Generalizing our analysis for California Republicans ----
+CAR <- function1_candidates(2012, "CA", "REP" )
+CARcandid <- function2_candid_id(CAR)
+CARcontr <- function3_contributions(CARcandid)
+CARjoined <- function4_joincand_cont(CAR, CARcontr)
+CARhouse <- function5_house_elec(CARjoined)
+CARfinal <- function6_finaldf(CARjoined, CARhouse)
+CARplot <- function7_plot(CARfinal)
+CARplot2 <- function8_facet(CARplot)
 ```
 
 ```{r,message= FALSE}
-	TXD <- function1_candidates(2012, "TX", "DEM" )
-	TXDcandid <- function2_candid_id(TXD)
-	TXDcontr <- function3_contributions(TXDcandid)
-	TXDjoined <- function4_joincand_cont(TXD, TXDcontr)
-	TXDhouse <- function5_house_elec(TXDjoined)
-	TXDfinal <- function6_finaldf(TXDjoined, TXDhouse)
-	TXDplot <- function7_plot(TXDfinal)
-	TXDplot2 <- function8_facet(TXDplot)
+# Generalizing our analysis for Texas Democrats ----
+TXD <- function1_candidates(2012, "TX", "DEM" )
+TXDcandid <- function2_candid_id(TXD)
+TXDcontr <- function3_contributions(TXDcandid)
+TXDjoined <- function4_joincand_cont(TXD, TXDcontr)
+TXDhouse <- function5_house_elec(TXDjoined)
+TXDfinal <- function6_finaldf(TXDjoined, TXDhouse)
+TXDplot <- function7_plot(TXDfinal)
+TXDplot2 <- function8_facet(TXDplot)
 ```
 
 
 ```{r,message= FALSE}
-	TXR <- function1_candidates(2012, "TX", "REP" )
-	TXRcandid <- function2_candid_id(TXR)
-	TXRcontr <- function3_contributions(TXRcandid)
-	TXRjoined <- function4_joincand_cont(TXR, TXRcontr)
-	TXRhouse <- function5_house_elec(TXRjoined)
-	TXRfinal <- function6_finaldf(TXRjoined, TXRhouse)
-	TXRplot <- function7_plot(TXRfinal)
-	TXRplot2 <- function8_facet(TXRplot)
-
+# Generalizing our analysis for Texas Republicans ----
+TXR <- function1_candidates(2012, "TX", "REP" )
+TXRcandid <- function2_candid_id(TXR)
+TXRcontr <- function3_contributions(TXRcandid)
+TXRjoined <- function4_joincand_cont(TXR, TXRcontr)
+TXRhouse <- function5_house_elec(TXRjoined)
+TXRfinal <- function6_finaldf(TXRjoined, TXRhouse)
+TXRplot <- function7_plot(TXRfinal)
+TXRplot2 <- function8_facet(TXRplot)
 ```
 
 #### New York 
 ```{r, message= FALSE}
-# The plots ----
+# The plots for New York ----
 NYDplot  
 NYDplot2
 NYRplot
@@ -324,6 +325,7 @@ NYRplot2
 
 ### California
 ```{r,message= FALSE}
+# The plots for California ----
 CADplot 
 CADplot2
 CARplot 
@@ -332,36 +334,46 @@ CARplot2
 
 ### Texas
 ```{r,message= FALSE}
+# The plots for Texas ----
 TXDplot 
 TXDplot2
 TXRplot 
 TXRplot2 
-
 ```
 
+## Analysis
+*Do the amount on contributions in house elections influence election success?*
 
-Do the amount on contributions in house elections influence election success?
-The questions our wrangled data attempts to address is whether the total amount of contributions received by candidates running in house elections is positively correlated with their chances of a win. We analyzed data in the year 2012 from three FEC data sets: Candidates, Contributions and House Elections. 
+The question our wrangled data attempts to address is whether the total amount of contributions received by candidates running in house elections is positively correlated with their chances of a win. We analyzed data in the year 2012 from three FEC data sets: Candidates, Contributions and House Elections. 
 
-Context
-The house of representatives is composed of representatives who represent their congressional districts in their respective states. The number of congressional districts allocated to each of the 50 states is based on the state’s population size. Each district is entitled to one representative. Thus, there are multiple candidates running for house elections within each party for a particular state. Our analysis focuses on these candidates running for election to the house of representatives. 
+*Context*
 
-Method of investigation
-Our investigation began by first focusing on candidates within a particular state, year and party. We included party as variable to control for the fact that the probability of winning may be influenced by whether a state is already blue or red from the last election cycle. 
+The House of Representatives is composed of politicians who represent their congressional districts in their respective states. The number of congressional districts allocated to each of the 50 states is based on the state’s population size. Each district is entitled to one representative, and their are multiple districts in each state. Thus, there will be multiple candidates running for house election within each party for a particular state. Our analysis focuses on these candidates running for election to The House of Representatives. 
 
-We began with New York Democrats in 2012 and wrangled this from the FEC “Candidates” data set. We then created a list of the candidates’ IDs and used these IDs to filter out their corresponding contributions from the FEC “Contributions” data set. The two datasets, “Candidates” and “Contributions”, were then joined by their corresponding candidate IDs. 
+*Method of investigation*
 
-In the House Elections dataset, we filtered for our variables of interest: candidate ID (under the name fec_id), whether the candidate won or lost, and whether they were an incumbent. We proceeded to filter the House Election dataset by the candidate IDs we wrangled earlier (New York Democrats in 2012). 
+Our analysis took part in 4 stages:
 
-Our final data frame was created by joining the data sets; Contributions, Candidates and House Elections, by the selected candidate IDs. We calculated the total amount of contributions each candidate received and removed candidates with no data. Since previous research has found that on average house candidates received approximately 1.6 million dollars in campaign contributions, we filtered out candidates who received less than $50000. This gives us a diversity of candidates yet eliminates any data that may not be useful in our analysis.
+1) We focused on candidates within a particular state, year and party. We included party as variable to control for the fact that the probability of winning may be influenced by whether a state is already 'blue' or 'red' from the last election cycle. 
+We selected New York Democrats in 2012 and wrangled this from the FEC “Candidates” data set. 
 
-Considering that our sample size becomes too small to pick up any trend once filtering out for year, party and state, we created functions to generalize our analysis and ran them for the three biggest states, by population, in each region: New York (East), California (West) and Texas (South). 
+2) We created a list of the candidates’ IDs in our wrangled candidates data set, and used these IDs to filter out their corresponding contributions from the FEC “contributions” data set. The two datasets, “Candidates” and “Contributions”, were joined by their matching candidate IDs. 
 
-Results
-Upon analyzing our graphs that do not take into account whether a candidate is an incumbent, we noticed that there was no consistent trend between contribution amount and wins. For example, in NY democrats (NYD), Kathleen Hochul received the greatest amount in donations yet did not win. Similarly, Brian Higgins received few donations and won. Similarly, for NY republicans (NYR), Buerkle and Hayworth got the greatest amount in contribution yet lost. Thus, there seems to be no obvious direct correlation between amount of donations received and probability of winning.
+3) In the House Elections dataset, we filtered for our variables of interest: candidate ID (under the name fec_id), whether the candidate won or lost, and whether they were an incumbent (this choice will become clear in our analysis). The House Election dataset was then filtered according to the candidate IDs we wrangled earlier, which in our particular case this was the candidate IDs of New York Democrats in 2012.
 
-Therefore, we decided to further our analysis by faceting the graphs by whether the candidate was an incumbent or not. It appears that if you are an incumbent, you are more likely to get larger donations (see CARplot2, TXRplot2, NYR/Dplot2), but not necessarily win. Similarly, if you are an incumbent, you are likely to win even if you have a smaller amount in contributions (see NYDplot2, CADplot2). 
+4) Our final data frame was created by joining the data sets; Contributions, Candidates and House Elections by our selected candidate IDs. The total amount of contributions to each candidate was calculated. Candidates with no data were omitted.
 
-Conclusion
-From this data, we learn that if you are an incumbent, the amount of donations you receive does not necessarily have a significant impact on whether you win or not, however, if you are not an incumbent, donations matter more in determining whether or not you win. 
+According to previous research^[http://www.msnbc.com/hardball/how-much-does-it-cost-win-seat-congre], the average amount that house candidates received in donations in 2012 was approximately 1.6 million dollars. Therefore, we filtered out candidates who received less than $50000. This gives us a diversity of candidates yet eliminates any data that may not be useful in our analysis.
+
+Considering that our sample size becomes too small to conclude any trend once we wrangled for year, party and state, we created functions to generalize our analysis. Since a greater number of candidates run in states with large populations, we chose the three biggest states by population in each region: New York (East), California (West) and Texas (South). 
+
+*Results*
+
+In our initial analysis, the graphs that do not take into account whether a candidate is an incumbent or not, we noticed that there was no consistent trend between contribution amount and wins. For example, in NY democrats (NYD), Hochul received the greatest amount in donations yet did not win. Similarly, for NY republicans (NYR), Buerkle and Hayworth got the greatest amount in contribution yet lost. We see this same result in California democrats and republicans (CAD/R) and Texas republicans. There are also candidates who received relatively little in donations (less than 2 million) and still won. Thus, there seems to be no obvious direct correlation between amount of donations received and probability of winning.
+
+Therefore, we decided to further our analysis by faceting our initial graphs by whether the candidate was an incumbent or not. It appears that if you are an incumbent, you are more likely to get larger donations (see NYR/Dplot2, CARplot2, TXRplot2), but not necessarily win. Similarly, if you are an incumbent, it seems you are more likely to win even if you have a smaller amount in contributions (see NYD/Rplot2, TXRplot2, CADplot2). This result could be explained by the fact that, firstly, incumbents are more established and therefore donations matter less. Secondly, we recognize that most of the candidates who run are probably incumbents which could be skewing our results. If you are not an incumbent, it seems that the more donations you have, the more likely you are to win as the blue bars are longer for non-incumbents who won (see NYDplot2, CADplot2, TXDplot2)
+
+*Conclusion*
+
+From this data, we learn that if you are an incumbent, the amount of donations you receive does not necessarily have a significant impact on whether you win or not, however, if you are not an incumbent, donations matter may matter more to your success. Our analysis should be run for more states in order to strenghten this statement. 
 
