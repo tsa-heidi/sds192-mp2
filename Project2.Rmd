@@ -125,8 +125,8 @@ NYDplot <- ggplot(data = final_df,
                      labels=c("0$", 
                               "2,000,000$",
                               "4,000,000$")) + 
-  theme(axis.text.x = element_text(angle = 0))+
-  scale_fill_manual(values=c("#95A5A6","#00CC00"))
+  theme(axis.text.x = element_text(angle = 0))
+NYDplot
 ```
 
 ```{r}
@@ -151,7 +151,6 @@ NYDplot2 <- ggplot(data = final_df,
     name = "Money Spent (millions of USD)",
     breaks=c(0,2000000,4000000),
     labels=c("0$", "2,000,000$", "4,000,000$")) +
- scale_fill_manual(values=c("#95A5A6","#00CC00"))+
   facet_wrap(~incumbent,labeller = labeller(incumbent = incumbent))+
    theme_get()
 ```
