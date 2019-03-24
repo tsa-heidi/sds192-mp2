@@ -41,7 +41,6 @@ Modifying Candidates
 ```{r}
 candidates_NY2012 <- candidates %>%
   filter(cand_office_state == "NY")%>%
-  filter(cand_party_affiliation == "DEM") %>%
   filter(cand_election_yr == 2012) %>%
   select(cand_id, cand_name)
 candidates_NY2012
@@ -91,13 +90,18 @@ final_df <- inner_join(contr_cand_joined, house_elections_NY2012, by = "cand_id"
 
 final_df <- select(final_df,cand_name, sum, ge_winner, incumbent) %>%
   arrange(sum) %>%
-  filter(sum>=40000)
+  filter(sum>=40000) %>%
+  mutate(incumbent01= ifelse(incumbent==TRUE, 1, 0))
 final_df <- na.omit(final_df)
 ```
 
 Creating a data graphic
 ```{r}
+plot1 <- ggplot(data = final_df, aes(x=incumbent, y= sum, color=ge_winner)) + geom_point(size=5)
+plot1
+```
 
+```{r}
 my_plot <- ggplot(data= final_df, aes(x = reorder(cand_name,-sum), y = sum, fill = ge_winner)) + 
   geom_bar(position = "dodge",stat = "identity")+
   coord_flip() +
@@ -224,3 +228,5 @@ my_plotNYR <- ggplot(data= NYRfinal, aes(x = cand_name, y = sum, fill = ge_winne
 my_plotNYR + theme(axis.text.x = element_text(angle = 0)) 
 options(scipen = 100000)
 ```
+
+
