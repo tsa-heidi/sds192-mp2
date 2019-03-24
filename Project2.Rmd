@@ -219,26 +219,29 @@ function6_finaldf <- function(function4df, function5df) {
     select(cand_name, sum, ge_winner, incumbent) %>%
     arrange(ge_winner) %>%
     filter(!is.na(sum)) %>%
-    filter(sum > 40000)
+    filter(sum > 50000)
 }
 ```
 
 ```{r}
 function7_plot <- function(function6df) {
   ggplot(data = function6df, 
-                   aes(x = reorder(cand_name,-sum), 
-                       y = sum, fill = ge_winner)) + 
+                   aes(x = reorder(cand_name,-sum),
+                       y = sum, 
+                       fill = ge_winner)) + 
   geom_bar(position = "dodge",
-           stat = "identity") +
+           stat = "identity")+
   coord_flip() +
   ggtitle("Does contribution amount influence house election success?") +
   xlab("") +
   labs(fill="") +
-  scale_fill_discrete(labels=c("Lost", "Won")) +
-  scale_y_continuous(name = "Money Spent (millions of USD)",                breaks=c(0,2000000,4000000),
-                     labels=c("0$", 
-                              "2,000,000$",
-                              "4,000,000$")) + theme(axis.text.x = element_text(angle = 0))
+  scale_fill_discrete(labels = c("Lost","Won")) +
+  scale_y_continuous(
+    name = "Money Spent (millions of USD)",
+    breaks=c(0,2000000,4000000),
+    labels=c("0$", "2,000,000$", "4,000,000$")) +
+ scale_fill_manual(values=c("#95A5A6","#00CC00"))+
+  theme_get()
 }
 ```
 
