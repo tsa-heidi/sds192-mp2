@@ -262,13 +262,13 @@ NYRplot2 <- function8_facet(NYRplot)
 
 ```{r}
 CAD <- function1_candidates(2012, "CA", "DEM" )
-	CADcandid <- function2_candid_id(CAD)
-	CADcontr <- function3_contributions(CADcandid)
-	CADjoined <- function4_joincand_cont(CAD, CADcontr)
-	CADhouse <- function5_house_elec(CADjoined)
-	CADfinal <- function6_finaldf(CADjoined, CADhouse)
-	CADplot <- function7_plot(CADfinal)
-	CADplot2 <- function8_facet(CADplot)
+CADcandid <- function2_candid_id(CAD)
+CADcontr <- function3_contributions(CADcandid)
+CADjoined <- function4_joincand_cont(CAD, CADcontr)
+CADhouse <- function5_house_elec(CADjoined)
+CADfinal <- function6_finaldf(CADjoined, CADhouse)
+CADplot <- function7_plot(CADfinal)
+CADplot2 <- function8_facet(CADplot)
 ```
 
 ```{r,message= FALSE}
