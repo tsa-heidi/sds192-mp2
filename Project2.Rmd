@@ -242,3 +242,15 @@ my_plot3 + facet_wrap(~incumbent)
 
 ```
 
+```{r}
+devtools::install_github("benmarwick/wordcountaddin", type = "source", dependencies = TRUE)
+```
+
+
+```{r}
+wordcountaddin::word_count("Project2.Rmd")
+```
+#
+
+
+
