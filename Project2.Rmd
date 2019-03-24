@@ -39,6 +39,7 @@ glimpse(contributions)
 # Modifying the candidates data frame ----
 candidates_NY2012 <- candidates %>%
   filter(cand_office_state == "NY")%>%
+  filter(cand_party_affiliation == "DEM") %>%
   filter(cand_election_yr == 2012) %>%
   select(cand_id, 
          cand_name)
@@ -94,7 +95,7 @@ final_df <- inner_join(contr_cand_joined,
          ge_winner, 
          incumbent) %>%
   arrange(sum) %>%
-  filter(sum >= 40000) %>% # we chose to filter out candidates who received less than 50 000 dollars 
+  filter(sum >= 50000) %>% # we chose to filter out candidates who received less than 50 000 dollars 
   filter(!is.na(sum))
 ```
 #Creating the data graphic using the final data frame
@@ -157,8 +158,9 @@ my_plot2
 Creating a function to wrangle candidates data
 ```{r,message= FALSE}
 # Function 1 generalizes the data wrangling for the candidates dataset ----
-function1_candidates <- function(year, state) {
+function1_candidates <- function(year, state, party) {
   candidates %>%
+    filter(cand_party_affiliation == party) %>%
     filter(cand_election_yr == year) %>%
     filter(cand_office_state == state) %>%
     select(cand_id, cand_name) 
@@ -214,18 +216,9 @@ function6_finaldf <- function(function4df, function5df) {
 }
 ```
 
-```{r,message= FALSE}
-NYR <- function1_candidates(2012, "TX")
-NYRcandid <- function2_candid_id(NYR)
-NYRcontr <- function3_contributions(NYRcandid)
-NYRjoined <- function4_joincand_cont(NYR, NYRcontr)
-NYRhouse <- function5_house_elec(NYRjoined)
-NYRfinal <- function6_finaldf(NYRjoined, NYRhouse)
-```
-
 ```{r}
-options(scipen = 100000)
-my_plot3 <- ggplot(data = NYRfinal, 
+function7_plot <- function(function6df) {
+  ggplot(data = function6df, 
                    aes(x = reorder(cand_name,-sum), 
                        y = sum, fill = ge_winner)) + 
   geom_bar(position = "dodge",
@@ -239,23 +232,77 @@ my_plot3 <- ggplot(data = NYRfinal,
                      labels=c("0$", 
                               "2,000,000$",
                               "4,000,000$")) + theme(axis.text.x = element_text(angle = 0))
-my_plot3
+}
 ```
 
 ```{r}
-my_plot3 + facet_wrap(~incumbent)
+function8_facet <- function(function7plotname) {
+  function7plotname + facet_wrap(~incumbent)
+}
+```
 
+```{r,message= FALSE}
+NYR <- function1_candidates(2012, "NY", "REP" )
+NYRcandid <- function2_candid_id(NYR)
+NYRcontr <- function3_contributions(NYRcandid)
+NYRjoined <- function4_joincand_cont(NYR, NYRcontr)
+NYRhouse <- function5_house_elec(NYRjoined)
+NYRfinal <- function6_finaldf(NYRjoined, NYRhouse)
+NYRplot <- function7_plot(NYRfinal)
+NYRplot2 <- function8_facet(NYRplot)
+```
+
+```{r,message= FALSE}
+CAD <- function1_candidates(2012, "CA", "DEM" )
+CADcandid <- function2_candid_id(CAD)
+CADcontr <- function3_contributions(CADcandid)
+CADjoined <- function4_joincand_cont(CAD, CADcontr)
+CADhouse <- function5_house_elec(CADjoined)
+CADfinal <- function6_finaldf(CADjoined, CADhouse)
+CADplot <- function7_plot(CADfinal)
+CADplot2 <- function8_facet(CADplot)
+```
+
+```{r,message= FALSE}
+CAR <- function1_candidates(2012, "CA", "REP" )
+CARcandid <- function2_candid_id(CAR)
+CARcontr <- function3_contributions(CARcandid)
+CARjoined <- function4_joincand_cont(CAR, CARcontr)
+CARhouse <- function5_house_elec(CARjoined)
+CARfinal <- function6_finaldf(CARjoined, CARhouse)
+CARplot <- function7_plot(CARfinal)
+CARplot2 <- function8_facet(CARplot)
+```
+
+```{r,message= FALSE}
+TXD <- function1_candidates(2012, "TX", "DEM" )
+TXDcandid <- function2_candid_id(TXD)
+TXDcontr <- function3_contributions(TXDcandid)
+TXDjoined <- function4_joincand_cont(TXD, TXDcontr)
+TXDhouse <- function5_house_elec(TXDjoined)
+TXDfinal <- function6_finaldf(TXDjoined, TXDhouse)
+TXDplot <- function7_plot(TXDfinal)
+TXDplot2 <- function8_facet(TXDplot)
+```
+
+```{r,message= FALSE}
+TXR <- function1_candidates(2012, "TX", "REP" )
+TXRcandid <- function2_candid_id(TXR)
+TXRcontr <- function3_contributions(TXRcandid)
+TXRjoined <- function4_joincand_cont(TXR, TXRcontr)
+TXRhouse <- function5_house_elec(TXRjoined)
+TXRfinal <- function6_finaldf(TXRjoined, TXRhouse)
+TXRplot <- function7_plot(TXRfinal)
+TXRplot2 <- function8_facet(TXRplot)
 ```
 
 ```{r}
-devtools::install_github("benmarwick/wordcountaddin", type = "source", dependencies = TRUE)
+CADplot 
+CADplot2
+CARplot 
+CARplot2
+TXDplot 
+TXDplot2
+TXRplot
+TXRplot2
 ```
-
-
-```{r}
-wordcountaddin::word_count("Project2.Rmd")
-```
-#
-
-
-
