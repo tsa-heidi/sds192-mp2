@@ -13,7 +13,14 @@ knitr::opts_chunk$set(echo = TRUE)
 #### Using a GitHub repository and including a link to it in the footnotes
 We used Github Repository ^[https://github.com/violanguyen/sds192-mp2.git] 
 
+```{r}
+devtools::install_github("benmarwick/wordcountaddin", type = "source", dependencies = TRUE)
+```
 
+
+```{r}
+wordcountaddin::word_count("Project2.Rmd")
+```
 
 ```{r, message= FALSE}
 # Loading datasets ----
@@ -331,3 +338,30 @@ TXRplot
 TXRplot2 
 
 ```
+
+
+Do the amount on contributions in house elections influence election success?
+The questions our wrangled data attempts to address is whether the total amount of contributions received by candidates running in house elections is positively correlated with their chances of a win. We analyzed data in the year 2012 from three FEC data sets: Candidates, Contributions and House Elections. 
+
+Context
+The house of representatives is composed of representatives who represent their congressional districts in their respective states. The number of congressional districts allocated to each of the 50 states is based on the state’s population size. Each district is entitled to one representative. Thus, there are multiple candidates running for house elections within each party for a particular state. Our analysis focuses on these candidates running for election to the house of representatives. 
+
+Method of investigation
+Our investigation began by first focusing on candidates within a particular state, year and party. We included party as variable to control for the fact that the probability of winning may be influenced by whether a state is already blue or red from the last election cycle. 
+
+We began with New York Democrats in 2012 and wrangled this from the FEC “Candidates” data set. We then created a list of the candidates’ IDs and used these IDs to filter out their corresponding contributions from the FEC “Contributions” data set. The two datasets, “Candidates” and “Contributions”, were then joined by their corresponding candidate IDs. 
+
+In the House Elections dataset, we filtered for our variables of interest: candidate ID (under the name fec_id), whether the candidate won or lost, and whether they were an incumbent. We proceeded to filter the House Election dataset by the candidate IDs we wrangled earlier (New York Democrats in 2012). 
+
+Our final data frame was created by joining the data sets; Contributions, Candidates and House Elections, by the selected candidate IDs. We calculated the total amount of contributions each candidate received and removed candidates with no data. Since previous research has found that on average house candidates received approximately 1.6 million dollars in campaign contributions, we filtered out candidates who received less than $50000. This gives us a diversity of candidates yet eliminates any data that may not be useful in our analysis.
+
+Considering that our sample size becomes too small to pick up any trend once filtering out for year, party and state, we created functions to generalize our analysis and ran them for the three biggest states, by population, in each region: New York (East), California (West) and Texas (South). 
+
+Results
+Upon analyzing our graphs that do not take into account whether a candidate is an incumbent, we noticed that there was no consistent trend between contribution amount and wins. For example, in NY democrats (NYD), Kathleen Hochul received the greatest amount in donations yet did not win. Similarly, Brian Higgins received few donations and won. Similarly, for NY republicans (NYR), Buerkle and Hayworth got the greatest amount in contribution yet lost. Thus, there seems to be no obvious direct correlation between amount of donations received and probability of winning.
+
+Therefore, we decided to further our analysis by faceting the graphs by whether the candidate was an incumbent or not. It appears that if you are an incumbent, you are more likely to get larger donations (see CARplot2, TXRplot2, NYR/Dplot2), but not necessarily win. Similarly, if you are an incumbent, you are likely to win even if you have a smaller amount in contributions (see NYDplot2, CADplot2). 
+
+Conclusion
+From this data, we learn that if you are an incumbent, the amount of donations you receive does not necessarily have a significant impact on whether you win or not, however, if you are not an incumbent, donations matter more in determining whether or not you win. 
+
