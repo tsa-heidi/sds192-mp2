@@ -129,12 +129,12 @@ my_plot1 <- ggplot(data = final_df,
   scale_fill_manual(values=c("#95A5A6","#00CC00"))
 ```
 
-```{r}
+```{r, message= FALSE}
 incumbent <- c("Non incumbent", "Incumbent")
 names(incumbent)<-c("FALSE","TRUE")
 ```
 
-```{r}
+```{r, message= FALSE}
 # Faceting the final data graphic by incumbent ----
 my_plot2 <- ggplot(data = final_df, 
                    aes(x = reorder(cand_name,-sum),
@@ -223,7 +223,7 @@ function6_finaldf <- function(function4df, function5df) {
 
 
 
-```{r}
+```{r, message= FALSE}
 function7_plot <- function(function6df) {
 	  ggplot(data = function6df, 
 	                   aes(x = reorder(cand_name,-sum), 
@@ -245,7 +245,7 @@ function7_plot <- function(function6df) {
 }
 ```
 
-```{r}
+```{r, message= FALSE}
 function8_facet <- function(function7plotname) {
   function7plotname + facet_wrap(~incumbent,labeller = labeller(incumbent = incumbent))+
    theme_get()
@@ -263,7 +263,7 @@ NYRplot <- function7_plot(NYRfinal)
 NYRplot2 <- function8_facet(NYRplot)
 ```
 
-```{r}
+```{r, message= FALSE}
 CAD <- function1_candidates(2012, "CA", "DEM" )
 	CADcandid <- function2_candid_id(CAD)
 	CADcontr <- function3_contributions(CADcandid)
@@ -308,7 +308,7 @@ CAD <- function1_candidates(2012, "CA", "DEM" )
 	TXRplot2 <- function8_facet(TXRplot)
 ```
 
-```{r}
+```{r, message= FALSE}
 # The plot ----
 my_plot1  
 my_plot2
