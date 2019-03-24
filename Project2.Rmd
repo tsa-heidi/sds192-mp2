@@ -1,5 +1,5 @@
 ---
-title: "Project2"
+title: "Project 2 : Data Wrangling"
 author: Heidi, Harriet, Viola 
 output: 
   html_document:
@@ -10,7 +10,8 @@ knitr::opts_chunk$set(echo = TRUE)
 ```
 
 
-```{r}
+```{r, message= FALSE}
+# Loading datasets ----
 load("house_elections.rda")
 load("candidates.rda")
 load("committees.rda")
@@ -18,148 +19,130 @@ load("contributions.rda")
 ```
 
 
-```{r}
+```{r, message= FALSE, echo= FALSE}
+# Loading libraries ----
 library(tidyverse)
 library(dplyr)
 library(ggrepel)
 ```
 
-
-Verifying the data
-```{r}
+```{r, message= FALSE, eval=FALSE}
+# Verification of the data ----
 glimpse(house_elections)
 glimpse(candidates)
 glimpse(committees)
 glimpse(contributions)
 ```
 
-Modifying Candidates
-```{r}
+```{r,message= FALSE}
+# Modifying the candidates data frame ----
 candidates_NY2012 <- candidates %>%
   filter(cand_office_state == "NY")%>%
   filter(cand_election_yr == 2012) %>%
-  select(cand_id, cand_name)
-candidates_NY2012
+  select(cand_id, 
+         cand_name)
 ```
 
-Create a table of candidate IDs
-```{r}
-cand_IDs <- select(candidates_NY2012, matches("cand_id"))
+```{r,message= FALSE}
+# Creating a table of candidate IDs from the wrangled candidates data set ----
+cand_IDs <- select(candidates_NY2012,
+                   matches("cand_id"))
 ```
 
-Modifying Contributions
-```{r}
+```{r,message= FALSE}
+# Wrangling the contributions data frame ----
 contributions_NY <- contributions %>% 
-  filter(cand_id %in%
-           cand_IDs$cand_id) %>%
-  select(cand_id, transaction_amt)
+  filter(cand_id %in% cand_IDs$cand_id) %>%
+  select(cand_id, 
+         transaction_amt)
 ```
 
-
-Modifying house_elections
-```{r}
+```{r,message= FALSE}
+# Wrangling the house elections data frame ----
 house_elections_NY2012 <- house_elections %>%
-  select(fec_id, ge_winner, incumbent)
-
+  select(fec_id, 
+         ge_winner, 
+         incumbent)
 ```
 
-joining contributions and candidates
-```{r}
-contr_cand_joined <- full_join(contributions_NY, candidates_NY2012, by= "cand_id") %>%
-  group_by(cand_id, cand_name) %>%
+```{r,message= FALSE}
+# Joining the wrangled contributions and candidates data frames using full_join ----
+contr_cand_joined <- full_join(contributions_NY,
+                               candidates_NY2012, 
+                               by= "cand_id") %>%
+  group_by(cand_id, 
+           cand_name) %>%
   summarise(sum = sum(transaction_amt)) %>%
   arrange(sum)
-contr_cand_joined
 ```
 
-
-filter and modify house elections
-```{r}
-house_elections_NY2012 <- filter(house_elections_NY2012, fec_id %in% contr_cand_joined$cand_id)
-house_elections_NY2012 <-  mutate(house_elections_NY2012, cand_id = fec_id )
+```{r,message= FALSE}
+# Wrangling house elections by filtering with candidates IDs in the joined candidate and contribution data frame ----
+house_elections_NY2012 <- filter(house_elections_NY2012,
+                                 fec_id %in% contr_cand_joined$cand_id) %>%
+  mutate(cand_id = fec_id)
 ```
 
-Creating the final data frame
-```{r}
-final_df <- inner_join(contr_cand_joined, house_elections_NY2012, by = "cand_id") %>% 
-  select(cand_name, sum, ge_winner, incumbent)
-
-final_df <- select(final_df,cand_name, sum, ge_winner, incumbent) %>%
+```{r,message= FALSE}
+# Creating the final data frame by using inner join to join the wrangled house election and the previously joined data frame of candidates and contributions ----
+final_df <- inner_join(contr_cand_joined,
+                       house_elections_NY2012, 
+                       by = "cand_id") %>%
+  select(cand_name, 
+         sum, 
+         ge_winner, 
+         incumbent) %>%
   arrange(sum) %>%
-  filter(sum>=40000) %>%
-  mutate(incumbent01= ifelse(incumbent==TRUE, 1, 0))
-final_df <- na.omit(final_df)
+  filter(sum >= 40000) %>% # we chose to filter out candidates who received less than 50 000 dollars 
+  filter(!is.na(sum))
 ```
 
-```{r}
-test1 <- final_df %>%
-  group_by(incumbent, ge_winner) %>%
-  mutate(total=sum(sum))
-```
-
-```{r}
-test2 <- final_df %>%
-  filter(incumbent== "TRUE")
-```
-
-```{r}
-test3 <- final_df %>%
-  filter(incumbent == "FALSE")
-```
-
-```{r}
-my_plot3 <- ggplot(data= test2, aes(x = reorder(cand_name,-sum), y = sum, fill = ge_winner)) + 
-  geom_bar(position = "dodge",stat = "identity")+
-  coord_flip() +
-  ggtitle("Does contribution amount influence house election success?")+
-  xlab("")+
-  labs(fill="")+
-  scale_fill_discrete(labels=c("Lost","Won"))+
-  scale_y_continuous(name="Money Spent (millions of USD)",breaks=c(0,2000000,4000000),labels=c("0$", "2,000,000$", "4,000,000$"))
-  
-my_plot3 + theme(axis.text.x = element_text(angle = 0)) 
+```{r,message= FALSE}
+# Creating the data graphic using the final data frame
 options(scipen = 100000)
-
-my_plot4 <- ggplot(data= test3, aes(x = reorder(cand_name,-sum), y = sum, fill = ge_winner)) + 
-  geom_bar(position = "dodge",stat = "identity")+
+my_plot1 <- ggplot(data = final_df, 
+                   aes(x = reorder(cand_name,-sum), 
+                       y = sum, fill = ge_winner)) + 
+  geom_bar(position = "dodge",
+           stat = "identity") +
   coord_flip() +
-  ggtitle("Does contribution amount influence house election success?")+
-  xlab("")+
-  labs(fill="")+
-  scale_fill_discrete(labels=c("Lost","Won"))+
-  scale_y_continuous(name="Money Spent (millions of USD)",breaks=c(0,2000000,4000000),labels=c("0$", "2,000,000$", "4,000,000$"))
-  
-my_plot4 + theme(axis.text.x = element_text(angle = 0)) 
-options(scipen = 100000)
-```
-Creating a data graphic
-```{r}
-plot1 <- ggplot(data = test1, aes(x=incumbent, y= ge_winner, size=total)) + geom_point()
-plot1
+  ggtitle("Does contribution amount influence house election success?") +
+  xlab("") +
+  labs(fill="") +
+  scale_fill_discrete(labels=c("Lost", "Won")) +
+  scale_y_continuous(name = "Money Spent (millions of USD)",                breaks=c(0,2000000,4000000),
+                     labels=c("0$", 
+                              "2,000,000$",
+                              "4,000,000$")) + theme(axis.text.x = element_text(angle = 0))
 ```
 
 ```{r}
-my_plot1 <- ggplot(data= final_df, aes(x = reorder(cand_name,-sum), y = sum, fill = ge_winner)) + 
-  geom_bar(position = "dodge",stat = "identity")+
+# Faceting the final data graphic by incumbent ----
+my_plot2 <- ggplot(data = final_df, 
+                   aes(x = reorder(cand_name,-sum),
+                       y = sum, 
+                       fill = ge_winner)) + 
+  geom_bar(position = "dodge",
+           stat = "identity")+
   coord_flip() +
-  ggtitle("Does contribution amount influence house election success?")+
-  xlab("")+
-  labs(fill="")+
-  scale_fill_discrete(labels=c("Lost","Won"))+
-  scale_y_continuous(name="Money Spent (millions of USD)",breaks=c(0,2000000,4000000),labels=c("0$", "2,000,000$", "4,000,000$"))
-  
-my_plot1 + theme(axis.text.x = element_text(angle = 0)) 
-options(scipen = 100000)
+  ggtitle("Does contribution amount influence house election success?") +
+  xlab("") +
+  labs(fill="") +
+  scale_fill_discrete(labels = c("Lost","Won")) +
+  scale_y_continuous(
+    name = "Money Spent (millions of USD)",
+    breaks=c(0,2000000,4000000),
+    labels=c("0$", "2,000,000$", "4,000,000$")) + 
+  facet_wrap(~incumbent)
+```
 
-my_plot2 <- ggplot(data= final_df, aes(x = reorder(cand_name,-sum), y = sum, fill = ge_winner)) + 
-  geom_bar(position = "dodge",stat = "identity")+
-  coord_flip() +
-  ggtitle("Does contribution amount influence house election success?")+
-  xlab("")+
-  labs(fill="")+
-  scale_fill_discrete(labels=c("Lost","Won"))+
-  scale_y_continuous(name="Money Spent (millions of USD)",breaks=c(0,2000000,4000000),labels=c("0$", "2,000,000$", "4,000,000$")) + facet_wrap(~incumbent)
-  
+```{r}
+# The plot ----
+my_plot1  
+```
+
+```{r}
+# Second plot faceted by incumbents ----
 my_plot2
 ```
 
@@ -167,7 +150,8 @@ my_plot2
 # Functions
 
 Creating a function to wrangle candidates data
-```{r}
+```{r,message= FALSE}
+# Function 1 generalizes the data wrangling for the candidates dataset ----
 function1_candidates <- function(year, state) {
   candidates %>%
     filter(cand_election_yr == year) %>%
@@ -176,23 +160,15 @@ function1_candidates <- function(year, state) {
 }
 ```
 
-```{r}
-NY <- function1_candidates(2012, "NY")
-```
-
-Takes your chosen state (e.g NY) and creates a list of candidate ids
-```{r}
+```{r,message= FALSE}
+# Function 2 takes the data frame made by the 1st function and creates a list of the candidate IDs from that data frame ----
 function2_candid_id <- function(function1df) {
   select(function1df, matches("cand_id"))
 }
 ```
 
-```{r}
-NYid <- function2_candid_id(NY)
-```
-
-In this function, use your cadidate ID list retrieve contributions by candidate ID
-```{r}
+```{r,message= FALSE}
+# Function 3 takes the data frame made from function 2 and uses it to wrangle the contributions data frame ----
 function3_contributions <- function(function2df) {
   contributions %>%
     filter(cand_id %in%
@@ -201,12 +177,8 @@ function3_contributions <- function(function2df) {
 }
 ```
 
-```{r}
-NYcontributions <- function3_contributions(NYid)
-```
-
-In this function, join your candidate and their contributions by using your first data set when you modified candidates and your contributions data
-```{r}
+```{r,message= FALSE}
+# Function 4 takes the wrangled candidates data frame produced by function 1 and the wrangled contribution data frame produced by function 3 and joins those two dataframes ----
 function4_joincand_cont <- function(function1df, function3df) {
   full_join(function1df, function3df, by="cand_id") %>%
     group_by(cand_id, cand_name) %>%
@@ -215,12 +187,8 @@ function4_joincand_cont <- function(function1df, function3df) {
 }
 ```
 
-```{r}
-JoinedNY <- function4_joincand_cont(NY, NYcontributions)
-```
-
-Function of house elections
-```{r}
+```{r,message= FALSE}
+# Function 5 takes the data frame created by function 4, and uses it to wrangle the house elections data frame ----
 function5_house_elec <- function(function4df) {
   house_elections %>% 
     select(fec_id, ge_winner, incumbent) %>%
@@ -230,12 +198,8 @@ function5_house_elec <- function(function4df) {
 
 ```
 
-```{r}
-Joinedhouse <- function5_house_elec(JoinedNY)
-```
-
-Create the final data frame
-```{r}
+```{r,message= FALSE}
+# Function 6 takes the data frame created by function 4 and function 5 and joins them to create the final data frame that will produce the overall analysis
 function6_finaldf <- function(function4df, function5df) {
   inner_join(function4df, function5df, by = "cand_id") %>%
     select(cand_name, sum, ge_winner, incumbent) %>%
@@ -245,13 +209,8 @@ function6_finaldf <- function(function4df, function5df) {
 }
 ```
 
-```{r}
-finaldf <- function6_finaldf(JoinedNY, Joinedhouse)
-```
-
-NY Republicans
-```{r}
-NYR <- function1_candidates(2012, "MA")
+```{r,message= FALSE}
+NYR <- function1_candidates(2012, "TX")
 NYRcandid <- function2_candid_id(NYR)
 NYRcontr <- function3_contributions(NYRcandid)
 NYRjoined <- function4_joincand_cont(NYR, NYRcontr)
@@ -260,17 +219,26 @@ NYRfinal <- function6_finaldf(NYRjoined, NYRhouse)
 ```
 
 ```{r}
-my_plotNYR <- ggplot(data= NYRfinal, aes(x = cand_name, y = sum, fill = ge_winner)) + 
-  geom_bar(position = "dodge",stat = "identity")+
-  coord_flip() +
-  ggtitle("Amount of money spent on individual candidates")+
-  xlab("")+
-  labs(fill="")+
-  scale_fill_discrete(labels=c("Lost","Won"))+
-  scale_y_continuous(name="Money Spent (millions of USD)",breaks=c(0,2000000,4000000),labels=c("0$", "2,000,000$", "4,000,000$"))
-
-my_plotNYR + theme(axis.text.x = element_text(angle = 0)) 
 options(scipen = 100000)
+my_plot3 <- ggplot(data = NYRfinal, 
+                   aes(x = reorder(cand_name,-sum), 
+                       y = sum, fill = ge_winner)) + 
+  geom_bar(position = "dodge",
+           stat = "identity") +
+  coord_flip() +
+  ggtitle("Does contribution amount influence house election success?") +
+  xlab("") +
+  labs(fill="") +
+  scale_fill_discrete(labels=c("Lost", "Won")) +
+  scale_y_continuous(name = "Money Spent (millions of USD)",                breaks=c(0,2000000,4000000),
+                     labels=c("0$", 
+                              "2,000,000$",
+                              "4,000,000$")) + theme(axis.text.x = element_text(angle = 0))
+my_plot3
 ```
 
+```{r}
+my_plot3 + facet_wrap(~incumbent)
+
+```
 
