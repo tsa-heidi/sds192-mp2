@@ -82,7 +82,7 @@ house_elections_NY2012 <-  mutate(house_elections_NY2012, cand_id = fec_id )
 Creating the final data frame
 ```{r}
 final_df <- inner_join(contr_cand_joined, house_elections_NY2012, by = "cand_id") %>% 
-  select(cand_name, sum, ge_winner, incumbent)
+  select(final_df,cand_name, sum, ge_winner, incumbent)
 
 final_df <- inner_join(contr_cand_joined, house_elections_NY2012, by = "cand_id")
 
@@ -112,11 +112,11 @@ options(scipen = 100000)
 ```
 
 
+# Functions
+
 Creating a function to wrangle candidates data
 ```{r}
-
-
-mod_candidates <- function(year, state, party) {
+function1_candidates <- function(year, state, party) {
   candidates %>%
     filter(cand_election_yr == year) %>%
     filter(cand_office_state == state) %>%
@@ -126,38 +126,38 @@ mod_candidates <- function(year, state, party) {
 ```
 
 ```{r}
-NY <- mod_candidates(2012, "NY", "DEM")
+NY <- function1_candidates(2012, "NY", "DEM")
 ```
 
-Takes your chosen state and creates a list of candidate ids
+Takes your chosen state (e.g NY) and creates a list of candidate ids
 ```{r}
-candid_id <- function(yourdata) {
-  select(yourdata, matches("cand_id"))
+function2_candid_id <- function(function1df) {
+  select(function1df, matches("cand_id"))
 }
+```
+
+```{r}
+NYid <- function2_candid_id(NY)
 ```
 
 In this function, use your cadidate ID list retrieve contributions by candidate ID
 ```{r}
-contributionsf <- function(statecandidateIDs) {
+function3_contributions <- function(function2df) {
   contributions %>%
     filter(cand_id %in%
-             statecandidateIDs$cand_id) %>%
+             function2df$cand_id) %>%
     select(cand_id, transaction_amt)
 }
 ```
 
 ```{r}
-NYid <- candid_id(NY)
+NYcontributions <- function3_contributions(NYid)
 ```
 
+In this function, join your candidate and their contributions by using your first data set when you modified candidates and your contributions data
 ```{r}
-NYcontributions <- contributionsf(NYid)
-```
-
-In this function, join your candidate their contributions by using your first function to choose a state and its candidates, and your contributions data
-```{r}
-joincandandcont <- function(yourcandidates, yourcontributions) {
-  full_join(yourcandidates, yourcontributions, by="cand_id") %>%
+function4_joincand_cont <- function(function1df, function3df) {
+  full_join(function1df, function3df, by="cand_id") %>%
     group_by(cand_id, cand_name) %>%
     summarise(sum=sum(transaction_amt)) %>%
     arrange(sum)
@@ -165,30 +165,60 @@ joincandandcont <- function(yourcandidates, yourcontributions) {
 ```
 
 ```{r}
-joincandandcont(NY, NYcontributions)
-mod_candidates <- function(year_arg, state_arg, party_arg) {
-  candidates %>%
-    filter(cand_election_yr == year_arg) %>%
-    filter(cand_office_state == state_arg) %>%
-    filter(cand_party_affiliation == party_arg) %>%
-    select(cand_id, cand_name) 
+JoinedNY <- function4_joincand_cont(NY, NYcontributions)
+```
+
+Function of house elections
+```{r}
+function5_house_elec <- function(function4df) {
+  house_elections %>% 
+    select(fec_id, ge_winner, incumbent) %>%
+    filter(fec_id %in% function4df$cand_id) %>%
+    mutate(cand_id = fec_id)
+}
+
+```
+
+```{r}
+Joinedhouse <- function5_house_elec(JoinedNY)
+```
+
+Create the final data frame
+```{r}
+function6_finaldf <- function(function4df, function5df) {
+  inner_join(function4df, function5df, by = "cand_id") %>%
+    select(cand_name, sum, ge_winner, incumbent) %>%
+    arrange(ge_winner) %>%
+    filter(!is.na(sum)) %>%
+    filter(sum > 40000)
 }
 ```
 
 ```{r}
-NY <- mod_candidates(2012, "NY", "DEM")
-NY
+finaldf <- function6_finaldf(JoinedNY, Joinedhouse)
+```
 
-mod_candidates <- function(year_arg, state_arg, party_arg) {
-  candidates %>%
-    filter(cand_election_yr == year_arg) %>%
-    filter(cand_office_state == state_arg) %>%
-    filter(cand_party_affiliation == party_arg) %>%
-    select(cand_id, cand_name) 
-}
+NY Republicans
+```{r}
+NYR <- function1_candidates(2012, "NY", "REP")
+NYRcandid <- function2_candid_id(NYR)
+NYRcontr <- function3_contributions(NYRcandid)
+NYRjoined <- function4_joincand_cont(NYR, NYRcontr)
+NYRhouse <- function5_house_elec(NYRjoined)
+NYRfinal <- function6_finaldf(NYRjoined, NYRhouse)
 ```
 
 ```{r}
-NY <- mod_candidates(2012, "NY", "DEM")
-NY
+my_plotNYR <- ggplot(data= NYRfinal, aes(x = cand_name, y = sum, fill = ge_winner)) + facet_wrap(~incumbent) +
+  geom_bar(position = "dodge",stat = "identity")+
+  coord_flip() +
+  ggtitle("Amount of money spent on individual candidates")+
+  xlab("")+
+  labs(fill="")+
+  scale_fill_discrete(labels=c("Lost","Won"))+
+  scale_y_continuous(name="Money Spent (millions of USD)",breaks=c(0,2000000,4000000),labels=c("0$", "2,000,000$", "4,000,000$"))
+
+my_plotNYR + theme(axis.text.x = element_text(angle = 0)) 
+options(scipen = 100000)
+
 ```
