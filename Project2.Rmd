@@ -9,10 +9,6 @@ output:
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-```{r}
-devtools::install_github("benmarwick/wordcountaddin", type = "source", dependencies = TRUE)
-```
-
 
 ```{r}
 load("house_elections.rda")
@@ -95,14 +91,24 @@ final_df <- select(final_df,cand_name, sum, ge_winner, incumbent) %>%
 final_df <- na.omit(final_df)
 ```
 
-Creating a data graphic
 ```{r}
-plot1 <- ggplot(data = final_df, aes(x=incumbent, y= sum, color=ge_winner)) + geom_point(size=5)
-plot1
+test1 <- final_df %>%
+  group_by(incumbent, ge_winner) %>%
+  mutate(total=sum(sum))
 ```
 
 ```{r}
-my_plot <- ggplot(data= final_df, aes(x = reorder(cand_name,-sum), y = sum, fill = ge_winner)) + 
+test2 <- final_df %>%
+  filter(incumbent== "TRUE")
+```
+
+```{r}
+test3 <- final_df %>%
+  filter(incumbent == "FALSE")
+```
+
+```{r}
+my_plot3 <- ggplot(data= test2, aes(x = reorder(cand_name,-sum), y = sum, fill = ge_winner)) + 
   geom_bar(position = "dodge",stat = "identity")+
   coord_flip() +
   ggtitle("Does contribution amount influence house election success?")+
@@ -111,11 +117,50 @@ my_plot <- ggplot(data= final_df, aes(x = reorder(cand_name,-sum), y = sum, fill
   scale_fill_discrete(labels=c("Lost","Won"))+
   scale_y_continuous(name="Money Spent (millions of USD)",breaks=c(0,2000000,4000000),labels=c("0$", "2,000,000$", "4,000,000$"))
   
-my_plot + theme(axis.text.x = element_text(angle = 0)) 
+my_plot3 + theme(axis.text.x = element_text(angle = 0)) 
 options(scipen = 100000)
 
+my_plot4 <- ggplot(data= test3, aes(x = reorder(cand_name,-sum), y = sum, fill = ge_winner)) + 
+  geom_bar(position = "dodge",stat = "identity")+
+  coord_flip() +
+  ggtitle("Does contribution amount influence house election success?")+
+  xlab("")+
+  labs(fill="")+
+  scale_fill_discrete(labels=c("Lost","Won"))+
+  scale_y_continuous(name="Money Spent (millions of USD)",breaks=c(0,2000000,4000000),labels=c("0$", "2,000,000$", "4,000,000$"))
+  
+my_plot4 + theme(axis.text.x = element_text(angle = 0)) 
+options(scipen = 100000)
+```
+Creating a data graphic
+```{r}
+plot1 <- ggplot(data = test1, aes(x=incumbent, y= ge_winner, size=total)) + geom_point()
+plot1
+```
 
+```{r}
+my_plot1 <- ggplot(data= final_df, aes(x = reorder(cand_name,-sum), y = sum, fill = ge_winner)) + 
+  geom_bar(position = "dodge",stat = "identity")+
+  coord_flip() +
+  ggtitle("Does contribution amount influence house election success?")+
+  xlab("")+
+  labs(fill="")+
+  scale_fill_discrete(labels=c("Lost","Won"))+
+  scale_y_continuous(name="Money Spent (millions of USD)",breaks=c(0,2000000,4000000),labels=c("0$", "2,000,000$", "4,000,000$"))
+  
+my_plot1 + theme(axis.text.x = element_text(angle = 0)) 
+options(scipen = 100000)
 
+my_plot2 <- ggplot(data= final_df, aes(x = reorder(cand_name,-sum), y = sum, fill = ge_winner)) + 
+  geom_bar(position = "dodge",stat = "identity")+
+  coord_flip() +
+  ggtitle("Does contribution amount influence house election success?")+
+  xlab("")+
+  labs(fill="")+
+  scale_fill_discrete(labels=c("Lost","Won"))+
+  scale_y_continuous(name="Money Spent (millions of USD)",breaks=c(0,2000000,4000000),labels=c("0$", "2,000,000$", "4,000,000$")) + facet_wrap(~incumbent)
+  
+my_plot2
 ```
 
 
@@ -123,17 +168,16 @@ options(scipen = 100000)
 
 Creating a function to wrangle candidates data
 ```{r}
-function1_candidates <- function(year, state, party) {
+function1_candidates <- function(year, state) {
   candidates %>%
     filter(cand_election_yr == year) %>%
     filter(cand_office_state == state) %>%
-    filter(cand_party_affiliation == party) %>%
     select(cand_id, cand_name) 
 }
 ```
 
 ```{r}
-NY <- function1_candidates(2012, "NY", "DEM")
+NY <- function1_candidates(2012, "NY")
 ```
 
 Takes your chosen state (e.g NY) and creates a list of candidate ids
@@ -207,7 +251,7 @@ finaldf <- function6_finaldf(JoinedNY, Joinedhouse)
 
 NY Republicans
 ```{r}
-NYR <- function1_candidates(2012, "NY", "REP")
+NYR <- function1_candidates(2012, "MA")
 NYRcandid <- function2_candid_id(NYR)
 NYRcontr <- function3_contributions(NYRcandid)
 NYRjoined <- function4_joincand_cont(NYR, NYRcontr)
@@ -216,7 +260,7 @@ NYRfinal <- function6_finaldf(NYRjoined, NYRhouse)
 ```
 
 ```{r}
-my_plotNYR <- ggplot(data= NYRfinal, aes(x = cand_name, y = sum, fill = ge_winner)) + facet_wrap(~incumbent) +
+my_plotNYR <- ggplot(data= NYRfinal, aes(x = cand_name, y = sum, fill = ge_winner)) + 
   geom_bar(position = "dodge",stat = "identity")+
   coord_flip() +
   ggtitle("Amount of money spent on individual candidates")+
