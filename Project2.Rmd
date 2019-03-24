@@ -41,7 +41,7 @@ glimpse(contributions)
 # Modifying the candidates data frame ----
 candidates_NY2012 <- candidates %>%
   filter(cand_office_state == "NY")%>%
-  filter(cand_party_affiliation == "DEM")
+  filter(cand_party_affiliation == "DEM")%>%
   filter(cand_election_yr == 2012) %>%
   select(cand_id, 
          cand_name)
@@ -228,6 +228,7 @@ function6_finaldf <- function(function4df, function5df) {
 
 ```{r,message= FALSE}
 NYR <- function1_candidates(2012, "TX")
+```
 
 ```{r}
 function7_plot <- function(function6df) {
