@@ -111,7 +111,7 @@ final_df <- inner_join(contr_cand_joined,
 
 ```{r,message= FALSE}
 options(scipen = 100000)
-my_plot1 <- ggplot(data = final_df, 
+NYDplot <- ggplot(data = final_df, 
                    aes(x = reorder(cand_name,-sum), 
                        y = sum, fill = ge_winner)) + 
   geom_bar(position = "dodge",
@@ -136,7 +136,7 @@ names(incumbent)<-c("FALSE","TRUE")
 
 ```{r, message= FALSE}
 # Faceting the final data graphic by incumbent ----
-my_plot2 <- ggplot(data = final_df, 
+NYDplot2 <- ggplot(data = final_df, 
                    aes(x = reorder(cand_name,-sum),
                        y = sum, 
                        fill = ge_winner)) + 
@@ -308,10 +308,11 @@ CAD <- function1_candidates(2012, "CA", "DEM" )
 	TXRplot2 <- function8_facet(TXRplot)
 ```
 
+# New York 
 ```{r, message= FALSE}
-# The plot ----
-my_plot1  
-my_plot2
+# The plots ----
+NYDplot  
+NYDplot2
 NYRplot
 NYRplot2
 CADplot 
