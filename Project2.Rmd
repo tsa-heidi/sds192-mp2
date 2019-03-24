@@ -10,6 +10,7 @@ knitr::opts_chunk$set(echo = TRUE)
 ```
 
 
+
 ```{r, message= FALSE}
 # Loading datasets ----
 load("house_elections.rda")
@@ -24,6 +25,7 @@ load("contributions.rda")
 library(tidyverse)
 library(dplyr)
 library(ggrepel)
+library(grid)
 ```
 
 ```{r, message= FALSE, eval=FALSE}
@@ -114,7 +116,14 @@ my_plot1 <- ggplot(data = final_df,
                      labels=c("0$", 
                               "2,000,000$",
                               "4,000,000$")) + theme(axis.text.x = element_text(angle = 0))
+ 
 ```
+
+
+```{r}
+ my_plot1 + geom_text(aes(label =sum, nudge_y = 2)
+```
+
 
 ```{r}
 # Faceting the final data graphic by incumbent ----
@@ -125,6 +134,7 @@ my_plot2 <- ggplot(data = final_df,
   geom_bar(position = "dodge",
            stat = "identity")+
   coord_flip() +
+  geom_text(aes(label = sum, nudge_y = 2)+
   ggtitle("Does contribution amount influence house election success?") +
   xlab("") +
   labs(fill="") +
