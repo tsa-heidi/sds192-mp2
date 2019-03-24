@@ -10,7 +10,7 @@ knitr::opts_chunk$set(echo = TRUE)
 ```
 
 
-#Using a GitHub repository and including a link to it in the footnotes
+#### Using a GitHub repository and including a link to it in the footnotes
 We used Github Repository ^[https://github.com/violanguyen/sds192-mp2.git] 
 
 
