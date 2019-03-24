@@ -40,6 +40,7 @@ glimpse(committees)
 glimpse(contributions)
 ```
 
+
 ```{r,message= FALSE}
 # Modifying the candidates data frame ----
 candidates_NY2012 <- candidates %>%
@@ -153,16 +154,6 @@ my_plot2 <- ggplot(data = final_df,
  scale_fill_manual(values=c("#95A5A6","#00CC00"))+
   facet_wrap(~incumbent,labeller = labeller(incumbent = incumbent))+
    theme_get()
-```
-
-```{r}
-# The plot ----
-my_plot1  
-```
-
-```{r}
-# Second plot faceted by incumbents ----
-my_plot2
 ```
 
 
@@ -315,4 +306,20 @@ CAD <- function1_candidates(2012, "CA", "DEM" )
 	TXRfinal <- function6_finaldf(TXRjoined, TXRhouse)
 	TXRplot <- function7_plot(TXRfinal)
 	TXRplot2 <- function8_facet(TXRplot)
+```
+
+```{r}
+# The plot ----
+my_plot1  
+my_plot2
+NYRplot
+NYRplot2
+CADplot 
+CADplot2
+CARplot 
+CARplot2 
+TXDplot 
+TXDplot2
+TXRplot 
+TXRplot2 
 ```
