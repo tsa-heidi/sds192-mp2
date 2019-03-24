@@ -101,7 +101,7 @@ Creating a data graphic
 my_plot <- ggplot(data= final_df, aes(x = reorder(cand_name,-sum), y = sum, fill = ge_winner)) + 
   geom_bar(position = "dodge",stat = "identity")+
   coord_flip() +
-  ggtitle("Amount of money spent on individual candidates")+
+  ggtitle("Does contribution amount influence house election success?")+
   xlab("")+
   labs(fill="")+
   scale_fill_discrete(labels=c("Lost","Won"))+
