@@ -236,46 +236,7 @@ NYRhouse <- function5_house_elec(NYRjoined)
 NYRfinal <- function6_finaldf(NYRjoined, NYRhouse)
 ```
 
-```{r}
 
-options(scipen = 100000)
-my_plot3 <- ggplot(data = NYRfinal, 
-                   aes(x = reorder(cand_name,-sum), 
-                       y = sum, fill = ge_winner)) + 
-
-function7_plot <- function(function6df) {
-  ggplot(data = function6df, 
-                   aes(x = reorder(cand_name,-sum),
-                       y = sum, 
-                       fill = ge_winner)) + 
-  geom_bar(position = "dodge",
-           stat = "identity")+
-  coord_flip() +
-  ggtitle("Does contribution amount influence house election success?") +
-  xlab("") +
-  labs(fill="") +
-
-  scale_fill_discrete(labels=c("Lost", "Won")) +
-  scale_y_continuous(name = "Money Spent (millions of USD)",                breaks=c(0,2000000,4000000),
-                     labels=c("0$", 
-                              "2,000,000$",
-                              "4,000,000$")) + theme(axis.text.x = element_text(angle = 0))
-my_plot3
-  scale_fill_discrete(labels = c("Lost","Won")) +
-  scale_y_continuous(
-    name = "Money Spent (millions of USD)",
-    breaks=c(0,2000000,4000000),
-    labels=c("0$", "2,000,000$", "4,000,000$")) +
- scale_fill_manual(values=c("#95A5A6","#00CC00"))+
-  theme_get()
-}
-
-```
-
-```{r}
-my_plot3 + facet_wrap(~incumbent)
-
-```
 
 ```{r}
 devtools::install_github("benmarwick/wordcountaddin", type = "source", dependencies = TRUE)
@@ -285,7 +246,10 @@ devtools::install_github("benmarwick/wordcountaddin", type = "source", dependenc
 ```{r}
 wordcountaddin::word_count("Project2.Rmd")
 ```
-#
+
+#Using a GitHub repository and including a link to it in the footnotes
+We used Github Repository ^[https://github.com/violanguyen/sds192-mp2.git] 
+
 
 
 
