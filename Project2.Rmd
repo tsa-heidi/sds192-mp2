@@ -24,6 +24,7 @@ load("contributions.rda")
 ```
 
 
+
 ```{r, message= FALSE, echo= FALSE}
 # Loading libraries ----
 library(tidyverse)
@@ -39,7 +40,6 @@ glimpse(candidates)
 glimpse(committees)
 glimpse(contributions)
 ```
-
 
 ```{r,message= FALSE}
 # Modifying the candidates data frame ----
@@ -129,12 +129,12 @@ NYDplot <- ggplot(data = final_df,
   scale_fill_manual(values=c("#95A5A6","#00CC00"))
 ```
 
-```{r, message= FALSE}
+```{r}
 incumbent <- c("Non incumbent", "Incumbent")
 names(incumbent)<-c("FALSE","TRUE")
 ```
 
-```{r, message= FALSE}
+```{r}
 # Faceting the final data graphic by incumbent ----
 NYDplot2 <- ggplot(data = final_df, 
                    aes(x = reorder(cand_name,-sum),
@@ -156,13 +156,23 @@ NYDplot2 <- ggplot(data = final_df,
    theme_get()
 ```
 
+```{r}
+# The plot ----
+my_plot1  
+```
+
+```{r}
+# Second plot faceted by incumbents ----
+my_plot2
+```
+
 
 # Functions
 
 Creating a function to wrangle candidates data
 ```{r,message= FALSE}
 # Function 1 generalizes the data wrangling for the candidates dataset ----
-function1_candidates <- function(year, state, party) {
+function1_candidates <- function(year, state,party) {
   candidates %>%
     filter(cand_election_yr == year) %>%
     filter(cand_party_affiliation == party) %>%
@@ -223,7 +233,7 @@ function6_finaldf <- function(function4df, function5df) {
 
 
 
-```{r, message= FALSE}
+```{r}
 function7_plot <- function(function6df) {
 	  ggplot(data = function6df, 
 	                   aes(x = reorder(cand_name,-sum), 
@@ -245,7 +255,7 @@ function7_plot <- function(function6df) {
 }
 ```
 
-```{r, message= FALSE}
+```{r}
 function8_facet <- function(function7plotname) {
   function7plotname + facet_wrap(~incumbent,labeller = labeller(incumbent = incumbent))+
    theme_get()
@@ -263,7 +273,7 @@ NYRplot <- function7_plot(NYRfinal)
 NYRplot2 <- function8_facet(NYRplot)
 ```
 
-```{r, message= FALSE}
+```{r}
 CAD <- function1_candidates(2012, "CA", "DEM" )
 	CADcandid <- function2_candid_id(CAD)
 	CADcontr <- function3_contributions(CADcandid)
@@ -306,6 +316,7 @@ CAD <- function1_candidates(2012, "CA", "DEM" )
 	TXRfinal <- function6_finaldf(TXRjoined, TXRhouse)
 	TXRplot <- function7_plot(TXRfinal)
 	TXRplot2 <- function8_facet(TXRplot)
+
 ```
 
 #### New York 
@@ -331,4 +342,5 @@ TXDplot
 TXDplot2
 TXRplot 
 TXRplot2 
+
 ```
