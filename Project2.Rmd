@@ -224,5 +224,4 @@ my_plotNYR <- ggplot(data= NYRfinal, aes(x = cand_name, y = sum, fill = ge_winne
 
 my_plotNYR + theme(axis.text.x = element_text(angle = 0)) 
 options(scipen = 100000)
-
 ```
