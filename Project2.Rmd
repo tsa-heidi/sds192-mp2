@@ -10,6 +10,10 @@ knitr::opts_chunk$set(echo = TRUE)
 ```
 
 
+#Using a GitHub repository and including a link to it in the footnotes
+We used Github Repository ^[https://github.com/violanguyen/sds192-mp2.git] 
+
+
 
 ```{r, message= FALSE}
 # Loading datasets ----
@@ -26,7 +30,6 @@ library(tidyverse)
 library(dplyr)
 library(ggrepel)
 library(RColorBrewer)
-library(gridExtra)
 ```
 
 ```{r, message= FALSE, eval=FALSE}
@@ -42,6 +45,7 @@ glimpse(contributions)
 candidates_NY2012 <- candidates %>%
   filter(cand_office_state == "NY")%>%
   filter(cand_party_affiliation == "DEM")%>%
+  filter(cand_party_affiliation == "DEM") %>%
   filter(cand_election_yr == 2012) %>%
   select(cand_id, 
          cand_name)
@@ -216,6 +220,7 @@ function5_house_elec <- function(function4df) {
 
 ```{r,message= FALSE}
 # Function 6 takes the data frame created by function 4 and function 5 and joins them to create the final data frame that will produce the overall analysis
+
 function6_finaldf <- function(function4df, function5df) {
   inner_join(function4df, function5df, by = "cand_id") %>%
     select(cand_name, sum, ge_winner, incumbent) %>%
@@ -226,9 +231,6 @@ function6_finaldf <- function(function4df, function5df) {
 ```
 
 
-```{r,message= FALSE}
-NYR <- function1_candidates(2012, "TX")
-```
 
 ```{r}
 function7_plot <- function(function6df) {
@@ -253,7 +255,7 @@ function7_plot <- function(function6df) {
 ```
 
 ```{r}
-function(function7plotname) {
+function8_facet <- function(function7plotname) {
   function7plotname + facet_wrap(~incumbent,labeller = labeller(incumbent = incumbent))+
    theme_get()
 }
@@ -266,33 +268,51 @@ NYRcontr <- function3_contributions(NYRcandid)
 NYRjoined <- function4_joincand_cont(NYR, NYRcontr)
 NYRhouse <- function5_house_elec(NYRjoined)
 NYRfinal <- function6_finaldf(NYRjoined, NYRhouse)
-
-```
-
-
-```{r}
 NYRplot <- function7_plot(NYRfinal)
 NYRplot2 <- function8_facet(NYRplot)
 ```
 
 ```{r}
-NYRplot
-NYRplot2
+CAD <- function1_candidates(2012, "CA", "DEM" )
+	CADcandid <- function2_candid_id(CAD)
+	CADcontr <- function3_contributions(CADcandid)
+	CADjoined <- function4_joincand_cont(CAD, CADcontr)
+	CADhouse <- function5_house_elec(CADjoined)
+	CADfinal <- function6_finaldf(CADjoined, CADhouse)
+	CADplot <- function7_plot(CADfinal)
+	CADplot2 <- function8_facet(CADplot)
 ```
 
-```{r}
-devtools::install_github("benmarwick/wordcountaddin", type = "source", dependencies = TRUE)
+```{r,message= FALSE}
+	CAR <- function1_candidates(2012, "CA", "REP" )
+	CARcandid <- function2_candid_id(CAR)
+	CARcontr <- function3_contributions(CARcandid)
+	CARjoined <- function4_joincand_cont(CAR, CARcontr)
+	CARhouse <- function5_house_elec(CARjoined)
+	CARfinal <- function6_finaldf(CARjoined, CARhouse)
+	CARplot <- function7_plot(CARfinal)
+	CARplot2 <- function8_facet(CARplot)
+```
+
+```{r,message= FALSE}
+	TXD <- function1_candidates(2012, "TX", "DEM" )
+	TXDcandid <- function2_candid_id(TXD)
+	TXDcontr <- function3_contributions(TXDcandid)
+	TXDjoined <- function4_joincand_cont(TXD, TXDcontr)
+	TXDhouse <- function5_house_elec(TXDjoined)
+	TXDfinal <- function6_finaldf(TXDjoined, TXDhouse)
+	TXDplot <- function7_plot(TXDfinal)
+	TXDplot2 <- function8_facet(TXDplot)
 ```
 
 
-```{r}
-wordcountaddin::word_count("Project2.Rmd")
+```{r,message= FALSE}
+	TXR <- function1_candidates(2012, "TX", "REP" )
+	TXRcandid <- function2_candid_id(TXR)
+	TXRcontr <- function3_contributions(TXRcandid)
+	TXRjoined <- function4_joincand_cont(TXR, TXRcontr)
+	TXRhouse <- function5_house_elec(TXRjoined)
+	TXRfinal <- function6_finaldf(TXRjoined, TXRhouse)
+	TXRplot <- function7_plot(TXRfinal)
+	TXRplot2 <- function8_facet(TXRplot)
 ```
-
-
-#Using a GitHub repository and including a link to it in the footnotes
-We used Github Repository ^[https://github.com/violanguyen/sds192-mp2.git] 
-
-
-
-
