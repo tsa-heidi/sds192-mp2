@@ -25,7 +25,6 @@ load("contributions.rda")
 library(tidyverse)
 library(dplyr)
 library(ggrepel)
-library(grid)
 ```
 
 ```{r, message= FALSE, eval=FALSE}
@@ -98,32 +97,25 @@ final_df <- inner_join(contr_cand_joined,
   filter(sum >= 40000) %>% # we chose to filter out candidates who received less than 50 000 dollars 
   filter(!is.na(sum))
 ```
-
-
+#Creating the data graphic using the final data frame
 ```{r,message= FALSE}
-# Creating the data graphic using the final data frame
-options(scipen = 100000)
-my_plot1 <- ggplot(data = final_df, 
+my_plot1<- ggplot(data = final_df, 
                    aes(x = reorder(cand_name,-sum), 
-                       y = sum, fill = ge_winner)) + 
+                       y = sum, fill = ge_winner) + 
   geom_bar(position = "dodge",
            stat = "identity") +
   coord_flip() +
   ggtitle("Does contribution amount influence house election success?") +
   xlab("") +
+  geom_text(aes(label = sum, nudge_y = 2)+
   labs(fill="") +
-  scale_fill_discrete(labels=c("Lost", "Won")) +
+  scale_fill_discrete(labels=c("Lostxvxf", "Won")) +
   scale_y_continuous(name = "Money Spent (millions of USD)",                breaks=c(0,2000000,4000000),
                      labels=c("0$", 
                               "2,000,000$",
                               "4,000,000$")) + theme(axis.text.x = element_text(angle = 0))
- 
 ```
 
-
-```{r}
- my_plot1 + geom_text(aes(label =sum, nudge_y = 2)
-```
 
 
 ```{r}
@@ -253,7 +245,6 @@ my_plot3 + facet_wrap(~incumbent)
 
 ```
 
-
 ```{r}
 devtools::install_github("benmarwick/wordcountaddin", type = "source", dependencies = TRUE)
 ```
@@ -262,5 +253,7 @@ devtools::install_github("benmarwick/wordcountaddin", type = "source", dependenc
 ```{r}
 wordcountaddin::word_count("Project2.Rmd")
 ```
+#
+
 
 
