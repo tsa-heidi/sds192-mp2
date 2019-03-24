@@ -308,17 +308,25 @@ CAD <- function1_candidates(2012, "CA", "DEM" )
 	TXRplot2 <- function8_facet(TXRplot)
 ```
 
-# New York 
+#### New York 
 ```{r, message= FALSE}
 # The plots ----
 NYDplot  
 NYDplot2
 NYRplot
 NYRplot2
+```
+
+### California
+```{r,message= FALSE}
 CADplot 
 CADplot2
 CARplot 
 CARplot2 
+```
+
+### Texas
+```{r,message= FALSE}
 TXDplot 
 TXDplot2
 TXRplot 
