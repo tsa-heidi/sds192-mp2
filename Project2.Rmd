@@ -9,9 +9,7 @@ output:
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-
-#### Using a GitHub repository and including a link to it in the footnotes
-We used Github Repository ^[https://github.com/tsa-heidi/sds192-mp2] 
+Github Repository ^[https://github.com/tsa-heidi/sds192-mp2] 
 
 ```{r, message=FALSE}
 # Word counter ----
@@ -110,9 +108,6 @@ final_df <- inner_join(contr_cand_joined,
   filter(sum >= 50000) %>% # we chose to filter out candidates who received less than 50 000 dollars^[http://www.msnbc.com/hardball/how-much-does-it-cost-win-seat-congre]
   filter(!is.na(sum))
 ```
-#Creating the data graphic using the final data frame
-
-
 
 ```{r,message= FALSE}
 options(scipen = 100000)
@@ -134,6 +129,7 @@ NYDplot <- ggplot(data = final_df,
 ```
 
 ```{r}
+# Editing the faceted graph incumbent label ----
 incumbent <- c("Non incumbent", "Incumbent")
 names(incumbent)<-c("FALSE","TRUE")
 ```
@@ -160,8 +156,8 @@ NYDplot2 <- ggplot(data = final_df,
 ```
 
 # Functions
+Creating a function to generalize our wrangling
 
-Creating a function to wrangle candidates data
 ```{r,message= FALSE}
 # Function 1 generalizes the data wrangling for the candidates dataset ----
 function1_candidates <- function(year, state,party) {
@@ -342,15 +338,13 @@ TXRplot2
 ```
 
 ## Analysis
-*Do the amount on contributions in house elections influence election success?*
+*The question our wrangled data attempts to address is whether the total amount of contributions received by candidates running in house elections is positively correlated with their chances of a win. We analyzed data in the year 2012 from three FEC data sets: Candidates, Contributions and House Elections.*
 
-The question our wrangled data attempts to address is whether the total amount of contributions received by candidates running in house elections is positively correlated with their chances of a win. We analyzed data in the year 2012 from three FEC data sets: Candidates, Contributions and House Elections. 
-
-*Context*
+**Context**
 
 The House of Representatives is composed of politicians who represent their congressional districts in their respective states. The number of congressional districts allocated to each of the 50 states is based on the state’s population size. Each district is entitled to one representative, and their are multiple districts in each state. Thus, there will be multiple candidates running for house election within each party for a particular state. Our analysis focuses on these candidates running for election to The House of Representatives. 
 
-*Method of investigation*
+**Method of investigation**
 
 Our analysis took part in 4 stages:
 
@@ -367,13 +361,13 @@ According to previous research^[http://www.msnbc.com/hardball/how-much-does-it-c
 
 Considering that our sample size becomes too small to conclude any trend once we wrangled for year, party and state, we created functions to generalize our analysis for more states. Since a greater number of candidates run in states with large populations, we chose the three most populated states in each region: New York (East), California (West) and Texas (South). 
 
-*Results*
+**Results**
 
 In our initial analysis, the graphs that do not take into account whether a candidate is an incumbent or not, we noticed that there was no consistent trend between contribution amount and wins. For example, in NY democrats (NYD), Hochul received the greatest amount in donations yet did not win. Similarly, for NY republicans (NYR), Buerkle and Hayworth got the greatest amount in contribution yet lost. We see this same result in California democrats and republicans (CAD/R) and Texas republicans. There are also candidates who received relatively little in donations (less than 2 million) and still won. Thus, there seems to be no obvious direct correlation between amount of donations received and probability of winning.
 
 Therefore, we decided to further our analysis by faceting our initial graphs by whether the candidate was an incumbent or not. It appears that if you are an incumbent, you are more likely to get larger donations (see NYR/Dplot2, CARplot2, TXRplot2), but not necessarily win. Similarly, if you are an incumbent, it seems you will win even if you have a smaller amount in contributions (see NYD/Rplot2, TXRplot2, CADplot2). This result could be explained by the fact that incumbents are more established and therefore donations matter less. Furthermore, if you are not an incumbent, it seems that the more donations you have, the more likely you are to win as the blue bars are longer for non-incumbents who won (see NYDplot2, CADplot2, TXDplot2)
 
-*Conclusion*
+**Conclusion**
 
 From this data, we learn that if you are an incumbent, the amount of donations you receive does not necessarily have a significant impact on whether you win or not, however, if you are not an incumbent, donations matter may matter more to your success. Our analysis should be run for more states in order to strenghten this statement. 
 
