@@ -10,6 +10,11 @@ knitr::opts_chunk$set(echo = TRUE)
 ```
 
 ```{r}
+devtools::install_github("benmarwick/wordcountaddin", type = "source", dependencies = TRUE)
+```
+
+
+```{r}
 load("house_elections.rda")
 load("candidates.rda")
 load("committees.rda")
@@ -84,8 +89,8 @@ Creating the final data frame
 final_df <- inner_join(contr_cand_joined, house_elections_NY2012, by = "cand_id") %>% 
   select(final_df,cand_name, sum, ge_winner, incumbent)
 
-final_df <- inner_join(contr_cand_joined, house_elections_NY2012, by = "cand_id")
 
+final_df <- inner_join(contr_cand_joined, house_elections_NY2012, by = "cand_id")
 final_df <- select(final_df,cand_name, sum, ge_winner, incumbent) %>%
   arrange(ge_winner) %>%
   filter(sum>=40000)
@@ -111,6 +116,10 @@ options(scipen = 100000)
 
 ```
 
+```{r}
+my_plot2 <- ggplot(data = final_df, aes(x=sum, y=general_votes, color=ge_winner)) + geom_point()
+my_plot2
+```
 
 # Functions
 
