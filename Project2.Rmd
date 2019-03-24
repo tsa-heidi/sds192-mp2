@@ -253,7 +253,7 @@ function7_plot <- function(function6df) {
 ```
 
 ```{r}
-function(function7plotname) {
+function8_facet <- function(function7plotname) {
   function7plotname + facet_wrap(~incumbent,labeller = labeller(incumbent = incumbent))+
    theme_get()
 }
