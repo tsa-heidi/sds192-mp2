@@ -198,6 +198,8 @@ load(&quot;house_elections.rda&quot;)
 load(&quot;candidates.rda&quot;)
 load(&quot;committees.rda&quot;)
 load(&quot;contributions.rda&quot;)</code></pre>
+<pre><code>## Warning: package 'tidyverse' was built under R version 3.5.3</code></pre>
+<pre><code>## Warning: package 'ggplot2' was built under R version 3.5.3</code></pre>
 <pre class="r"><code># Verification of the data ----
 glimpse(house_elections)
 glimpse(candidates)
@@ -301,7 +303,7 @@ my_plot2</code></pre>
 <h1>Functions</h1>
 <p>Creating a function to wrangle candidates data</p>
 <pre class="r"><code># Function 1 generalizes the data wrangling for the candidates dataset ----
-function1_candidates &lt;- function(year, state, party) {
+function1_candidates &lt;- function(year, state,party) {
   candidates %&gt;%
     filter(cand_election_yr == year) %&gt;%
     filter(cand_party_affiliation == party) %&gt;%
