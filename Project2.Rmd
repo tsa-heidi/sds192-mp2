@@ -172,7 +172,7 @@ my_plot2
 Creating a function to wrangle candidates data
 ```{r,message= FALSE}
 # Function 1 generalizes the data wrangling for the candidates dataset ----
-function1_candidates <- function(year, state,party) {
+function1_candidates <- function(year, state, party) {
   candidates %>%
     filter(cand_election_yr == year) %>%
     filter(cand_party_affiliation == party) %>%
