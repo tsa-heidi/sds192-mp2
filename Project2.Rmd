@@ -151,6 +151,7 @@ my_plot2
 ```
 
 
+
 # Functions
 
 Creating a function to wrangle candidates data
