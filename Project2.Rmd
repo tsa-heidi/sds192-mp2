@@ -11,6 +11,13 @@ knitr::opts_chunk$set(echo = TRUE)
 
 Github Repository ^[https://github.com/tsa-heidi/sds192-mp2] 
 
+```{r, message=FALSE}
+# Installing word count add in
+devtools::install_github("benmarwick/wordcountaddin", type = "source", dependencies = TRUE)
+
+wordcountaddin::word_count("Project2.Rmd")
+```
+
 ```{r, message= FALSE}
 # Loading datasets ----
 load("house_elections.rda")
